@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCREAM Scouting App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+        }
+
+        h1, h2 {
+            color: #000000;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group > label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 40px;
+        }
+
+        button {
+            background-color: #d8ce44;
+            color: white;
+            padding: 20px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 10px;
+        }
+
+        button:hover {
+            background-color: #d8ce44d5;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .radio-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 100%;
+        }
+
+        .radio-option label {
+            font-weight: normal;
+            font-size: 1em;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-top: 5px;
+            min-height: 50px;
+            min-width: 50px;
+        }
+
+        .logo {
+            max-width: 200px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .underline {
+            text-decoration: underline;
+        }
+
+        section {
+            margin-bottom: 160px;
+        }
+
+        @media (max-width: 600px) { 
+            body {
+                padding: 15px 20px;
+                font-size: 24px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+
+            .radio-option {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .radio-option input[type="radio"] {
+                margin-top: 0;
+            }
+
+            .form-group button {
+                padding: 20px 25px;
+                font-size: 50px;
+            }
+           
+            .form-group div[style*="display: flex"] button {
+        padding: 15px 10px;
+        font-size: 24px;
+        width: 40px;
+        height: 60px;
+    }
+
+    .form-group div[style*="display: flex"] span {
+        font-size: 50px;
+        min-width: 40px;
+    }
+}
+    @media (max-width: 600px) {
+        .form-group div[style*="display: flex"] button {
+            padding: 20px 10px;
+            font-size: 28px;
+            width: 500px;
+            height: 100px;
+        }
+
+        .form-group div[style*="display: flex"] span {
+            font-size: 70px;
+            min-width: 50px;
+        }
+        input[type="checkbox"]{
+          min-width: 50px;
+          min-height: 50px;
+        }}
+</style>
+</head>
+<body>
+    <h1 id="page-title">SCREAM App</h1>
+    <img src="https://i.imgur.com/GkIqYB0.png" alt="Team SCREAM Logo" class="logo">
+    <form id="scouting-form"></form>
+    <div id="qrcode"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        var config_data = `
+        {
+          "dataFormat": "tsv",
+          "title": "SCREAM App",
+          "page_title": "Team SCREAM Scouting App",
+          "checkboxAs": "10",
+          "prematch": [
+            { "name": "Scouters First Name",
+              "code": "s",
+              "type": "scouter",
+              "size": 5,
+              "maxSize": 999,
+              "required": "true"
+            },
+            { "name": "Match #",
+              "code": "m",
+              "type": "match",
+              "min": 1,
+              "max": 150,
+              "required": "true"
+            },
+            { "name": "Robot",
+              "code": "r",
+              "type": "robot",
+              "choices": {
+                "r1": "Red-1",
+                "r2": "Red-2",
+                "r3": "Red-3",
+                "b1": "Blue-1",
+                "b2": "Blue-2",
+                "b3": "Blue-3"
+              },
+              "required":"true"
+            },
+            { "name": "Team #",
+              "code": "t",
+              "type": "team",
+              "min": 1,
+              "max": 99999
+            }
+          ],
+          "auton": [
+            
+          "teleop": [
+            
+          "endgame": [
+            
+          "postmatch": [
+           
+        }`;
+
+        const config = JSON.parse(config_data);
+        const form = document.getElementById('scouting-form');
+
+        document.getElementById('page-title').textContent = config.page_title;
+
+        function createFormElement(item) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            const label = document.createElement('label');
+            label.textContent = item.name;
+            
+            // Add underline class to specified labels
+            const underlinedLabels = [
+                "Scouters First Name", "Match #", "Robot", "Team #", "Leave Starting Zone", 
+                "Amp Scores", "Speaker Scores", "Times Amplified", "Pickup From", 
+                "Final Status", "Note in Trap", "Driver Skill", "Defense Rating", 
+                "Speed Rating", "Died/Immobilized", "Tippy (almost tipped over)", "Dropped Notes (>2)", 
+                "Make good alliance partner?"
+            ];
+            if (underlinedLabels.includes(item.name)) {
+                label.classList.add('underline');
+            }
+            
+            div.appendChild(label);
+
+            let input;
+            switch (item.type) {
+                case 'scouter':
+                case 'event':
+                case 'match':
+                case 'team':
+                    input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = item.code;
+                    input.required = item.required === 'true';
+                    if (item.defaultValue) input.value = item.defaultValue;
+                    if (item.size) input.size = item.size;
+                    if (item.maxSize) input.maxLength = item.maxSize;
+                    break;
+                case 'level':
+                case 'robot':
+                case 'radio':
+                    input = document.createElement('div');
+                    input.className = 'radio-group';
+                    for (let key in item.choices) {
+                        const radioDiv = document.createElement('div');
+                        radioDiv.className = 'radio-option';
+                        const radioLabel = document.createElement('label');
+                        radioLabel.textContent = item.choices[key];
+                        const radioInput = document.createElement('input');
+                        radioInput.type = 'radio';
+                        radioInput.name = item.code;
+                        radioInput.value = key;
+                        radioInput.id = `${item.code}_${key}`;
+                        if (key === item.defaultValue) radioInput.checked = true;
+                        radioDiv.appendChild(radioLabel);
+                        radioDiv.appendChild(radioInput);
+                        input.appendChild(radioDiv);
+                    }
+                    break;
+                case 'bool':
+                    input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.name = item.code;
+                    break;
+                case 'counter':
+                    input = document.createElement('div');
+                    input.style.display = 'flex';
+                    input.style.alignItems = 'center';
+                    input.style.justifyContent = 'center';
+                    input.style.gap = '10px';
+
+                    const decreaseBtn = document.createElement('button');
+                    decreaseBtn.textContent = '-';
+                    decreaseBtn.type = 'button';
+                    decreaseBtn.style.padding = '5px 10px';
+                    decreaseBtn.style.fontSize = '18px';
+
+                    const increaseBtn = document.createElement('button');
+                    increaseBtn.textContent = '+';
+                    increaseBtn.type = 'button';
+                    increaseBtn.style.padding = '5px 10px';
+                    increaseBtn.style.fontSize = '18px';
+
+                    const counterDisplay = document.createElement('span');
+                    counterDisplay.textContent = '0';
+                    counterDisplay.style.fontSize = '30px';
+                    counterDisplay.style.minWidth = '30px';
+                    counterDisplay.style.textAlign = 'center';
+
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = item.code;
+                    hiddenInput.value = '0';
+
+                    decreaseBtn.onclick = () => {
+                        let value = parseInt(hiddenInput.value);
+                        if (value > 0) {
+                            value--;
+                            hiddenInput.value = value;
+                            counterDisplay.textContent = value;
+                        }
+                    };
+                    increaseBtn.onclick = () => {
+                        let value = parseInt(hiddenInput.value);
+                        value++;
+                        hiddenInput.value = value;
+                        counterDisplay.textContent = value;
+                    };
+
+                    input.appendChild(decreaseBtn);
+                    input.appendChild(counterDisplay);
+                    input.appendChild(increaseBtn);
+                    input.appendChild(hiddenInput);
+                    break;
+                case 'text':
+                    input = document.createElement('textarea');
+                    input.name = item.code;
+                    if (item.size) input.cols = item.size;
+                    if (item.maxSize) input.maxLength = item.maxSize;
+                    break;
+                case 'clickable_image':
+                    input = document.createElement('div');
+                    input.innerHTML = `
+                        <div style="position: relative; display: inline-block;">
+                            <img id="field-image" src="${item.imageUrl}" alt="Field Image" style="width: 100%; max-width: 800px; height: auto;">
+                            <div id="click-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+                        </div>
+                        <input type="hidden" name="${item.code}" id="${item.code}-input">
+                    `;
+                    input.querySelector('#click-overlay').addEventListener('click', function(event) {
+                        const rect = event.target.getBoundingClientRect();
+                        const x = Math.round(event.clientX - rect.left);
+                        const y = Math.round(event.clientY - rect.top);
+                        const radius = parseInt(item.shape.split(' ')[1]);
+                        const circle = document.createElement('div');
+                        circle.style.position = 'absolute';
+                        circle.style.width = `${radius * 2}px`;
+                        circle.style.height = `${radius * 2}px`;
+                        circle.style.borderRadius = '50%';
+                        circle.style.backgroundColor = 'red';
+                        circle.style.left = `${x - radius}px`;
+                        circle.style.top = `${y - radius}px`;
+                        event.target.appendChild(circle);
+                        const inputField = document.getElementById(`${item.code}-input`);
+                        inputField.value += `${x},${y};`;
+                    });
+                    break;
+            }
+            if (input) div.appendChild(input);
+            return div;
+        }
+
+        function createSection(sectionName, items) {
+            const section = document.createElement('section');
+            const heading = document.createElement('h2');
+            heading.textContent = sectionName;
+            section.appendChild(heading);
+            items.forEach(item => {
+                section.appendChild(createFormElement(item));
+            });
+            return section;
+        }
+
+        form.appendChild(createSection('Pre-match', config.prematch));
+        form.appendChild(createSection('Autonomous', config.auton));
+        form.appendChild(createSection('Teleoperated', config.teleop));
+        form.appendChild(createSection('End Game', config.endgame));
+        form.appendChild(createSection('Post-match', config.postmatch));
+
+        const submitButton = document.createElement('button');
+        submitButton.type = 'submit';
+        submitButton.textContent = 'Submit';
+        form.appendChild(submitButton);
+
+        form.onsubmit = (e) => {
+    e.preventDefault();
+    let values = [];
+    
+    const inputs = form.querySelectorAll('input, textarea, select');
+    
+    let scouterName = '';
+    
+    inputs.forEach(input => {
+        if (input.name === 's') {
+            scouterName = input.value;
+            values.push(input.value);
+        } else if (input.type === 'checkbox') {
+            values.push(input.checked ? 'yes' : 'no');
+        } else if (input.type === 'radio') {
+            if (input.checked) {
+                values.push(input.value);
+            }
+        } else if (input.type !== 'submit') {
+            values.push(input.value);
+        }
+    });
+    
+    // Join all values with tabs
+    let output = values.join('\t');
+    
+    // Clear existing QR code
+    const existingQR = document.getElementById('qrcode');
+    if (existingQR) {
+        existingQR.innerHTML = '';
+    } else {
+        // Create a container for the QR code if it doesn't exist
+        const qrContainer = document.createElement('div');
+        qrContainer.id = 'qrcode';
+        document.body.appendChild(qrContainer);
+    }
+
+    // Generate the new QR code
+    new QRCode(document.getElementById("qrcode"), {
+        text: output,
+        width: 256,
+        height: 256
+    });
+
+    // Reset the form
+    form.reset();
+    
+    // Restore the Scouter's First Name
+    const scouterInput = form.querySelector('input[name="s"]');
+    if (scouterInput) {
+        scouterInput.value = scouterName;
+    }
+    
+    // Reset radio buttons
+    const radioInputs = form.querySelectorAll('input[type="radio"]');
+    radioInputs.forEach(radio => {
+        radio.checked = false;
+    });
+
+    // Reset checkboxes
+    const checkboxInputs = form.querySelectorAll('input[type="checkbox"]');
+    checkboxInputs.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Reset counter displays and hidden inputs
+    const counterGroups = form.querySelectorAll('.form-group div');
+    counterGroups.forEach(group => {
+        const display = group.querySelector('span');
+        const hiddenInput = group.querySelector('input[type="hidden"]');
+        if (display && hiddenInput) {
+            display.textContent = '0';
+            hiddenInput.value = '0';
+        }
+    });
+
+    // Clear circles from the clickable image
+    const clickOverlay = document.getElementById('click-overlay');
+    while (clickOverlay.firstChild) {
+        clickOverlay.removeChild(clickOverlay.firstChild);
+    }
+
+    alert('Form submitted! QR Code updated below.');
+};
+    </script>
+</body>
+</html>
