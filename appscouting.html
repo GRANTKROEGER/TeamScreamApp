@@ -180,49 +180,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         var config_data = `
-        {
-            "dataFormat": "tsv",
-            "title": "SCREAM App",
-            "page_title": "Team SCREAM Scouting App",
-            "checkboxAs": "10",
-            "prematch": [
-                { "name": "Scouters First Name", "code": "s", "type": "scouter", "size": 5, "maxSize": 999, "required": "true" },
-                { "name": "Match #", "code": "m", "type": "match", "min": 1, "max": 150, "required": "true" },
-                { "name": "Robot", "code": "r", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true" },
-                { "name": "Team #", "code": "t", "type": "team", "min": 1, "max": 99999 }
-            ],
-            "auton": [
-                { "name": "Leave Starting Zone", "code": "a_leaveStarting", "type": "bool" },
-                { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
-                { "name": "Amp Score", "code": "aas", "type": "counter" },
-                { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" },
-                { "name": "Speaker Score", "code": "ass", "type": "counter" },
-                { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" }
-            ],
-            "teleop": [
-                { "name": "Amp Score", "code": "tas", "type": "counter" },
-                { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" },
-                { "name": "Speaker Score", "code": "tss", "type": "counter" },
-                { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" },
-                { "name": "Notes Passed", "code": "t_NotesPassed", "type": "counter" },
-                { "name": "Shooting Locations", "code": "sl", "type": "clickable_image", "imageUrl": "https://i.imgur.com/kw2QR1S.png", "clickRestriction": "none", "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72", "shape": "circle 5 black red true" }
-            ],
-            "endgame": [
-                { "name": "Ended Where", "code": "fs", "type": "radio", "choices": { "s": "Source", "f": "Floor", "b": "Both", "x": "Not Attempted" } },
-                { "name": "Harmony", "code": "e_Harmony", "type": "radio", "choices": { "x": "None", "2": "2", "3": "3" } },
-                { "name": "Scored Trap", "code": "nit", "type": "counter" },
-                { "name": "Deadbot", "code": "e_deadBot", "type": "radio", "choices": { "n": "None", "q": "Quarter", "h": "Half", "t": "Three Fourths", "f": "Full" } }
-            ],
-            "postmatch": [
-                {"name": "Driver Skill", "code": "dS", "type": "radio", "choices": {"Not Good": "Not Good", "moderate": "Moderate","Good": "Good" }},
-                {"name": "Defense Rating", "code": "dF", "type": "radio", "choices": {"Not Good": "Not Good", "moderate": "Moderate","Good": "Good" }},
-                {"name": "Speed Rating", "code": "sR", "type": "radio", "choices": {"Slow": "Slow", "Average": "Average","Fast": "Fast","Very Fast": "Very Fast" }},
-                { "name": "Tippy", "code": "tippy", "type": "bool" },
-                { "name": "Dropped Notes", "code": "dropped", "type": "bool" },
-                { "name": "Broke Notes", "code": "broke", "type": "bool" },
-                { "name": "Good Alliance Member", "code": "goodAllianceMember", "type": "bool" }
-            ]
-        }`;
+{
+    "dataFormat": "tsv",
+    "title": "SCREAM App",
+    "page_title": "Team SCREAM Scouting App",
+    "checkboxAs": "10",
+    "prematch": [
+        { "name": "Scouters First Name", "code": "s", "type": "scouter", "size": 5, "maxSize": 999, "required": "true" },
+        { "name": "Match #", "code": "m", "type": "match", "min": 1, "max": 150, "required": "true" },
+        { "name": "Robot", "code": "r", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true" },
+        { "name": "Team #", "code": "t", "type": "team", "min": 1, "max": 99999 }
+    ],
+    "auton": [
+        { "name": "Leave Starting Zone", "code": "a_leaveStarting", "type": "bool" },  
+        { "name": "Speaker Score", "code": "ass", "type": "counter" },
+        { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" },
+        { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
+        { "name": "Amp Score", "code": "aas", "type": "counter" },
+        { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" }
+    ],
+    "teleop": [
+        { "name": "Speaker Score", "code": "tss", "type": "counter" },
+        { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" },
+        { "name": "Notes Passed", "code": "t_NotesPassed", "type": "counter" },
+        { "name": "Amp Score", "code": "tas", "type": "counter" },
+        { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" },
+        { "name": "Shooting Locations", "code": "sl", "type": "clickable_image", "imageUrl": "https://i.imgur.com/kw2QR1S.png", "clickRestriction": "none", "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72", "shape": "circle 5 black red true" }
+    ],
+    "endgame": [
+        { "name": "Ended", "code": "fs", "type": "radio", "choices": { "s": "Parked", "f": "Climbed", "x": "Neither" } },
+        { "name": "Picked Up", "code": "fs", "type": "radio", "choices": { "s": "Source", "f": "Floor", "b": "Both", "x": "Neither"}},
+        { "name": "Harmony", "code": "e_Harmony", "type": "radio", "choices": { "x": "None", "2": "2", "3": "3" } },
+        { "name": "Scored Trap", "code": "nit", "type": "counter" },
+        { "name": "Deadbot", "code": "e_deadBot", "type": "radio", "choices": { "n": "None", "q": "Quarter", "h": "Half", "t": "Three Fourths", "f": "Full" } }
+    ],
+    "postmatch": [
+        {"name": "Driver Skill", "code": "dS", "type": "radio", "choices": {"Not Good": "Not Good", "moderate": "Moderate","Good": "Good" }},
+        {"name": "Defense Rating", "code": "dF", "type": "radio", "choices": {"Not Good": "Not Good", "moderate": "Moderate","Good": "Good" }},
+        {"name": "Speed Rating", "code": "sR", "type": "radio", "choices": {"Slow": "Slow", "Average": "Average","Fast": "Fast","Very Fast": "Very Fast" }},
+        { "name": "Tippy", "code": "tippy", "type": "bool" },
+        { "name": "Dropped Notes", "code": "dropped", "type": "bool" },
+        { "name": "Broke Notes", "code": "broke", "type": "bool" },
+        { "name": "Good Alliance Member", "code": "goodAllianceMember", "type": "bool" }
+    ]
+}`;
 
         const config = JSON.parse(config_data);
         const form = document.getElementById('scouting-form');
@@ -475,4 +476,6 @@
             alert('Form submitted!');
         };
     </script>
-    <a href="index.html" class="submit-button" style="text-decoration: none; display: block; text-align: center;">Back</a>    </html>
+    <a href="index.html" class="submit-button" style="text-decoration: none; display: block; text-align: center;">Back</a>
+</body>
+</html>
