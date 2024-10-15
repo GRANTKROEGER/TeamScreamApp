@@ -192,17 +192,18 @@
         { "name": "Team #", "code": "t", "type": "team", "min": 1, "max": 99999 }
     ],
     "auton": [
+        { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
         { "name": "Leave Starting Zone", "code": "a_leaveStarting", "type": "bool" },  
         { "name": "Speaker Score", "code": "ass", "type": "counter" },
         { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" },
-        { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
         { "name": "Amp Score", "code": "aas", "type": "counter" },
         { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" }
     ],
     "teleop": [
+        { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
+        { "name": "Notes Passed", "code": "t_NotesPassed", "type": "counter" },
         { "name": "Speaker Score", "code": "tss", "type": "counter" },
         { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" },
-        { "name": "Notes Passed", "code": "t_NotesPassed", "type": "counter" },
         { "name": "Amp Score", "code": "tas", "type": "counter" },
         { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" },
         { "name": "Shooting Locations", "code": "sl", "type": "clickable_image", "imageUrl": "https://i.imgur.com/kw2QR1S.png", "clickRestriction": "none", "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72", "shape": "circle 5 black red true" }
@@ -211,7 +212,7 @@
         { "name": "Ended", "code": "fs", "type": "radio", "choices": { "s": "Parked", "f": "Climbed", "x": "Neither" } },
         { "name": "Picked Up", "code": "pu", "type": "radio", "choices": { "s": "Source", "f": "Floor", "b": "Both", "x": "Neither"}},
         { "name": "Harmony", "code": "e_Harmony", "type": "radio", "choices": { "x": "None", "2": "2", "3": "3" } },
-        { "name": "Scored Trap", "code": "nit", "type": "counter" },
+        { "name": "Scored Trap", "code": "nit", "type": "bool" },
         { "name": "Deadbot", "code": "e_deadBot", "type": "radio", "choices": { "n": "None", "q": "Quarter", "h": "Half", "t": "Three Fourths", "f": "Full" } }
     ],
     "postmatch": [
@@ -219,9 +220,6 @@
         {"name": "Defense Rating", "code": "dF", "type": "radio", "choices": {"Not Good": "Not Good", "moderate": "Moderate","Good": "Good", "x": "N/A" }},
         {"name": "Speed Rating", "code": "sR", "type": "radio", "choices": {"Slow": "Slow", "Average": "Average","Fast": "Fast","Very Fast": "Very Fast" }},
         { "name": "Tippy", "code": "tippy", "type": "bool" },
-        { "name": "Dropped Notes", "code": "dropped", "type": "bool" },
-        { "name": "Broke Notes", "code": "broke", "type": "bool" },
-        { "name": "Good Alliance Member", "code": "goodAllianceMember", "type": "bool" }
     ]
 }`;
 
