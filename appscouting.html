@@ -57,6 +57,12 @@
             margin-top: 10px;
             font-size: 200px;
         }
+        .color-buttons button {
+        padding: 10px 20px; /* Adjust the padding to make the buttons smaller */
+        font-size: 24px; /* Adjust the font size to make the text smaller */
+        min-width: 80px; /* Set a smaller minimum width for the buttons */
+        min-height: 60px; /* Set a smaller minimum height for the buttons */
+        }
 
         button:hover {
             background-color: #d8ce44d5;
@@ -179,8 +185,45 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-var config_data = `
-{
+
+let lastAddedDot = null;
+
+function changeDotColor(color) {
+    if (lastAddedDot) {
+        lastAddedDot.style.backgroundColor = color;
+        if (color === 'green') {
+            // Add data to QR code for score with x and y coordinates
+            const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
+            const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
+            const data = `Make,${x},${y};`;
+            updateQRCodeData(data);
+        } else if (color === 'yellow') {
+            // Add data to QR code for pick up with x and y coordinates
+            const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
+            const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
+            const data = `Pickup,${x},${y};`;
+            updateQRCodeData(data);
+        } else if (color === 'red') {
+            // Add data to QR code for miss with x and y coordinates
+            const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
+            const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
+            const data = `Miss,${x},${y};`;
+            updateQRCodeData(data);
+        } else {
+            // Handle other colors if needed
+        }
+    } else {
+        console.log('No dot element to change color.');
+    }
+}
+
+
+function updateQRCodeData(data) {
+    const inputField = document.getElementById('sl-input'); // Assuming the input field for clickable image data has an ID 'sl-input'
+    inputField.value += data;
+}
+
+var config_data = `{
     "dataFormat": "tsv",
     "title": "SCREAM App",
     "page_title": "Team SCREAM Scouting App",
@@ -194,10 +237,13 @@ var config_data = `
     "auton": [
         { "name": "Leave Starting Zone", "code": "a_leaveStarting", "type": "bool" },  
         { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
-        { "name": "Speaker Score", "code": "ass", "type": "counter" },
-        { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" },
-        { "name": "Amp Score", "code": "aas", "type": "counter" },
-        { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" }
+        { "name": "Auto Mapping", "code": "sl", "type": "clickable_image", "imageUrl": "https://i.imgur.com/kw2QR1S.png", "clickRestriction": "none", "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72", "shape": "circle 5 black red true",
+                    "colorButtons": [
+                { "name": "Score", "color": "green" },
+                { "name": "Pickup", "color": "yellow" },
+                { "name": "Miss", "color": "red" }
+            ]
+        }
     ],
     "teleop": [
         { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
@@ -205,7 +251,15 @@ var config_data = `
         { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" },
         { "name": "Amp Score", "code": "tas", "type": "counter" },
         { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" },
-        { "name": "Shooting Locations", "code": "sl", "type": "clickable_image", "imageUrl": "https://i.imgur.com/kw2QR1S.png", "clickRestriction": "none", "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72", "shape": "circle 5 black red true" }
+        {
+            "name": "Shooting Locations",
+            "code": "sl",
+            "type": "clickable_image",
+            "imageUrl": "https://i.imgur.com/kw2QR1S.png",
+            "clickRestriction": "none",
+            "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72",
+            "shape": "circle 5 black red true"
+        }
     ],
     "endgame": [
         { "name": "Ended", "code": "fs", "type": "radio", "choices": { "s": "Parked", "f": "Climbed", "x": "Neither" } },
@@ -337,33 +391,37 @@ var config_data = `
                     if (item.size) input.cols = item.size;
                     if (item.maxSize) input.maxLength = item.maxSize;
                     break;
-                case 'clickable_image':
-                    input = document.createElement('div');
-                    input.innerHTML = `
-                        <div style="position: relative; display: inline-block;">
-                            <img id="field-image" src="${item.imageUrl}" alt="Field Image" style="width: 100%; max-width: 800px; height: auto;">
-                            <div id="click-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
-                        </div>
-                        <input type="hidden" name="${item.code}" id="${item.code}-input">
-                    `;
-                    input.querySelector('#click-overlay').addEventListener('click', function(event) {
-                        const rect = event.target.getBoundingClientRect();
-                        const x = Math.round(event.clientX - rect.left);
-                        const y = Math.round(event.clientY - rect.top);
-                        const radius = parseInt(item.shape.split(' ')[1]);
-                        const circle = document.createElement('div');
-                        circle.style.position = 'absolute';
-                        circle.style.width = `${radius * 2}px`;
-                        circle.style.height = `${radius * 2}px`;
-                        circle.style.borderRadius = '50%';
-                        circle.style.backgroundColor = 'red';
-                        circle.style.left = `${x - radius}px`;
-                        circle.style.top = `${y - radius}px`;
-                        event.target.appendChild(circle);
-                        const inputField = document.getElementById(`${item.code}-input`);
-                        inputField.value += `${x},${y};`;
-                    });
-                    break;
+
+                    case 'clickable_image':
+            input = document.createElement('div');
+            input.innerHTML = `
+                <div style="position: relative; display: inline-block;">
+                    <img id="field-image" src="${item.imageUrl}" alt="Field Image" style="width: 100%; max-width: 800px; height: auto;">
+                    <div id="click-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+                </div>
+                <input type="hidden" name="${item.code}" id="${item.code}-input">
+            `;
+            input.querySelector('#click-overlay').addEventListener('click', function(event) {
+                const rect = event.target.getBoundingClientRect();
+                const x = Math.round(event.clientX - rect.left);
+                const y = Math.round(event.clientY - rect.top);
+                const radius = parseInt(item.shape.split(' ')[1]);
+                const circle = document.createElement('div');
+                circle.style.position = 'absolute';
+                circle.style.width = `${radius * 2}px`;
+                circle.style.height = `${radius * 2}px`;
+                circle.style.borderRadius = '50%';
+                circle.style.backgroundColor = 'red';
+                circle.style.left = `${x - radius}px`;
+                circle.style.top = `${y - radius}px`;
+                circle.id = 'dot'; // Set the id of the dot element to 'dot'
+                event.target.appendChild(circle);
+                const inputField = document.getElementById(`${item.code}-input`);
+                inputField.value += `${x},${y};`;
+
+                lastAddedDot = circle; // Update the reference to the last added dot element
+            });
+            break;
             }
             if (input) div.appendChild(input);
             return div;
@@ -388,6 +446,40 @@ var config_data = `
 
         const submitButton = document.getElementById('submit-button');
 
+        const greenButton = document.getElementById('green-button');
+
+        function createColorButtons(colorButtons) {
+    if (Array.isArray(colorButtons)) {
+        const colorButtonsContainer = document.createElement('div');
+        colorButtonsContainer.className = 'color-buttons';
+
+        colorButtons.forEach(button => {
+            const colorButton = document.createElement('button');
+            colorButton.textContent = button.name;
+            colorButton.style.backgroundColor = button.color;
+            colorButton.addEventListener('click', () => {
+                changeDotColor(button.color);
+            });
+            colorButtonsContainer.appendChild(colorButton);
+        });
+
+        document.body.insertBefore(colorButtonsContainer, document.getElementById('scouting-form'));
+    } else {
+        console.error('Color buttons data is missing or invalid for the item:', colorButtons);
+    }
+}
+
+// Loop through all sections of the config object
+for (const section of Object.keys(config)) {
+    if (Array.isArray(config[section])) {
+        config[section].forEach(item => {
+            if (item.type === 'clickable_image' && item.colorButtons) {
+                createColorButtons(item.colorButtons);
+            }
+        });
+    }
+}
+
         submitButton.onclick = (e) => {
             e.preventDefault();
             let values = [];
@@ -410,7 +502,22 @@ var config_data = `
                     values.push(input.value);
                 }
             });
-            
+            function createColorButtons(colorButtons) {
+    const colorButtonsContainer = document.createElement('div');
+    colorButtonsContainer.className = 'color-buttons';
+    
+    colorButtons.forEach(button => {
+        const colorButton = document.createElement('button');
+        colorButton.textContent = button.name;
+        colorButton.style.backgroundColor = button.color;
+        colorButton.addEventListener('click', () => {
+            changeDotColor(button.color);
+        });
+        colorButtonsContainer.appendChild(colorButton);
+    });
+    
+    document.body.insertBefore(colorButtonsContainer, document.getElementById('scouting-form'));
+}
             // Join all values with tabs
             let output = values.join('\t');
             
