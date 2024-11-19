@@ -62,8 +62,13 @@
         font-size: 24px; /* Adjust the font size to make the text smaller */
         min-width: 80px; /* Set a smaller minimum width for the buttons */
         min-height: 60px; /* Set a smaller minimum height for the buttons */
+        position: relative;
+        z-index: 10;
         }
-
+        #click-overlay {
+    position: relative;
+    /* Ensure this covers only the image area */
+}
         button:hover {
             background-color: #d8ce44d5;
         }
@@ -184,33 +189,41 @@
     <div id="qrcode"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
     <script>
 
 let lastAddedDot = null;
 
+
 function changeDotColor(color) {
     if (lastAddedDot) {
-        lastAddedDot.style.backgroundColor = color;
-        if (color === 'green') {
-            // Add data to QR code for score with x and y coordinates
-            const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
-            const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
-            const data = `Make,${x},${y};`;
-            updateQRCodeData(data);
-        } else if (color === 'yellow') {
-            // Add data to QR code for pick up with x and y coordinates
-            const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
-            const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
-            const data = `Pickup,${x},${y};`;
-            updateQRCodeData(data);
-        } else if (color === 'red') {
-            // Add data to QR code for miss with x and y coordinates
-            const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
-            const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
-            const data = `Miss,${x},${y};`;
-            updateQRCodeData(data);
+        // Check if the click occurred outside the clickable image area
+        const clickOverlay = document.getElementById('click-overlay');
+        if (!clickOverlay.contains(event.target)) {
+            lastAddedDot.style.backgroundColor = color;
+            if (color === 'green') {
+                // Add data to QR code for score with x and y coordinates
+                const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
+                const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
+                const data = `Make,${x},${y};`;
+                updateQRCodeData(data);
+            } else if (color === 'yellow') {
+                // Add data to QR code for pick up with x and y coordinates
+                const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
+                const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
+                const data = `Pickup,${x},${y};`;
+                updateQRCodeData(data);
+            } else if (color === 'red') {
+                // Add data to QR code for miss with x and y coordinates
+                const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
+                const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
+                const data = `Miss,${x},${y};`;
+                updateQRCodeData(data);
+            } else {
+                // Handle other colors if needed
+            }
         } else {
-            // Handle other colors if needed
+            console.log('Click only allowed outside the clickable image area.');
         }
     } else {
         console.log('No dot element to change color.');
@@ -411,7 +424,7 @@ var config_data = `{
                 circle.style.width = `${radius * 2}px`;
                 circle.style.height = `${radius * 2}px`;
                 circle.style.borderRadius = '50%';
-                circle.style.backgroundColor = 'red';
+                circle.style.backgroundColor = 'white';
                 circle.style.left = `${x - radius}px`;
                 circle.style.top = `${y - radius}px`;
                 circle.id = 'dot'; // Set the id of the dot element to 'dot'
@@ -448,6 +461,34 @@ var config_data = `{
 
         const greenButton = document.getElementById('green-button');
 
+        document.getElementById('click-overlay').addEventListener('click', function(event) {
+    // Check if the click is within the bounds of the image
+    const clickOverlay = document.getElementById('click-overlay');
+    const rect = clickOverlay.getBoundingClientRect();
+
+    if (event.clientY < rect.bottom) {
+        // Place a dot only if the click is within the image bounds
+        placeDot(event.clientX, event.clientY);
+    }
+});
+
+let addedDots = [];
+
+
+// Function to add a dot at a specific position
+function placeDot(x, y) {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.style.left = `${x}px`;
+    dot.style.top = `${y}px`;
+    document.getElementById('click-overlay').appendChild(dot);
+    
+    // Add the dot to the array of added dots
+    addedDots.push(dot); // Add the dot element to the addedDots array
+
+    // Debugging: Log the addedDots array to check if the dot is added
+    console.log(addedDots);
+}
         function createColorButtons(colorButtons) {
     if (Array.isArray(colorButtons)) {
         const colorButtonsContainer = document.createElement('div');
@@ -457,17 +498,64 @@ var config_data = `{
             const colorButton = document.createElement('button');
             colorButton.textContent = button.name;
             colorButton.style.backgroundColor = button.color;
-            colorButton.addEventListener('click', () => {
+            colorButton.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent the event from bubbling up to the clickable image
                 changeDotColor(button.color);
+                event.preventDefault();
             });
             colorButtonsContainer.appendChild(colorButton);
         });
 
-        document.body.insertBefore(colorButtonsContainer, document.getElementById('scouting-form'));
+        // Append color buttons after the clickable image
+        const clickOverlay = document.getElementById('click-overlay');
+        clickOverlay.parentNode.insertBefore(colorButtonsContainer, clickOverlay.nextSibling);
     } else {
         console.error('Color buttons data is missing or invalid for the item:', colorButtons);
     }
 }
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+
+// Function to delete the most recently added dot
+function deleteLastDot() {
+    if (addedDots.length > 0) {
+        const lastDot = addedDots.pop(); // Remove the last dot from the array
+        lastDot.remove(); // Remove the last added dot element from the DOM
+        lastAddedDot = addedDots[addedDots.length - 1] || null;
+        console.log('Dot deleted. Updated addedDots array:', addedDots); // Log the updated array
+    } else {
+        console.log('No dots to delete.');
+    }
+}
+
+
+// Add a new button for deleting the most recently placed dot
+const deleteButton = document.createElement('button');
+deleteButton.textContent = 'Delete Last Dot';
+deleteButton.style.backgroundColor = 'red'; // Choose a color for the delete button
+deleteButton.addEventListener('click', () => {
+    if (lastAddedDot) {
+        lastAddedDot.remove(); // Remove the last added dot element
+        lastAddedDot = null; // Reset the reference to the last added dot
+        event.preventDefault();
+        // You can also update the QR code data or perform any other necessary actions here
+    } else {
+        console.log('No dot element to delete.');
+    }
+
+    
+});
+
+// Event listener for the delete button to delete the most recently added dot
+deleteButton.addEventListener('click', deleteLastDot);
+
+// Append the delete button after the color buttons
+const colorButtonsContainer = document.querySelector('.color-buttons');
+colorButtonsContainer.appendChild(deleteButton);
+});
 
 // Loop through all sections of the config object
 for (const section of Object.keys(config)) {
@@ -480,105 +568,34 @@ for (const section of Object.keys(config)) {
     }
 }
 
-        submitButton.onclick = (e) => {
-            e.preventDefault();
-            let values = [];
-            
-            const inputs = form.querySelectorAll('input, textarea, select');
-            
-            let scouterName = '';
-            
-            inputs.forEach(input => {
-                if (input.name === 's') {
-                    scouterName = input.value;
-                    values.push(input.value);
-                } else if (input.type === 'checkbox') {
-                    values.push(input.checked ? 'yes' : 'no');
-                } else if (input.type === 'radio') {
-                    if (input.checked) {
-                        values.push(input.value);
-                    }
-                } else if (input.type !== 'submit') {
-                    values.push(input.value);
-                }
-            });
-            function createColorButtons(colorButtons) {
-    const colorButtonsContainer = document.createElement('div');
-    colorButtonsContainer.className = 'color-buttons';
-    
-    colorButtons.forEach(button => {
-        const colorButton = document.createElement('button');
-        colorButton.textContent = button.name;
-        colorButton.style.backgroundColor = button.color;
-        colorButton.addEventListener('click', () => {
-            changeDotColor(button.color);
-        });
-        colorButtonsContainer.appendChild(colorButton);
+submitButton.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Collect form data
+    const formData = new FormData(form);
+    let dataString = '';
+    for (let [key, value] of formData.entries()) {
+        dataString += `${key}:${value};`;
+    }
+
+    // Generate the QR code with the collected data
+    generateQRCode(dataString);
+});
+
+function generateQRCode(data) {
+    const qrContainer = document.getElementById('qrcode');
+    qrContainer.innerHTML = ''; // Clear any existing QR code
+
+    // Compress the data
+    const compressedData = LZString.compressToEncodedURIComponent(data);
+
+    new QRCode(qrContainer, {
+        text: compressedData,
+        width: 256,  // Increased width
+        height: 256, // Increased height
+        correctLevel: QRCode.CorrectLevel.L  // Lower error correction level
     });
-    
-    document.body.insertBefore(colorButtonsContainer, document.getElementById('scouting-form'));
-}
-            // Join all values with tabs
-            let output = values.join('\t');
-            
-            // Clear existing QR code
-            const existingQR = document.getElementById('qrcode');
-            if (existingQR) {
-                existingQR.innerHTML = '';
-            } else {
-                // Create a container for the QR code if it doesn't exist
-                const qrContainer = document.createElement('div');
-                qrContainer.id = 'qrcode';
-                document.body.appendChild(qrContainer);
-            }
-
-            // Generate the new QR code
-            new QRCode(document.getElementById("qrcode"), {
-                text: output,
-                width: 256,
-                height: 256
-            });
-
-            // Reset the form
-            form.reset();
-            
-            // Restore the Scouter's First Name
-            const scouterInput = form.querySelector('input[name="s"]');
-            if (scouterInput) {
-                scouterInput.value = scouterName;
-            }
-            
-            // Reset radio buttons
-            const radioInputs = form.querySelectorAll('input[type="radio"]');
-            radioInputs.forEach(radio => {
-                radio.checked = false;
-            });
-
-            // Reset checkboxes
-            const checkboxInputs = form.querySelectorAll('input[type="checkbox"]');
-            checkboxInputs.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-
-            // Reset counter displays and hidden inputs
-            const counterGroups = form.querySelectorAll('.form-group div');
-            counterGroups.forEach(group => {
-                const display = group.querySelector('span');
-                const hiddenInput = group.querySelector('input[type="hidden"]');
-                if (display && hiddenInput) {
-                    display.textContent = '0';
-                    hiddenInput.value = '0';
-                }
-            });
-
-            // Clear circles from the clickable image
-            const clickOverlay = document.getElementById('click-overlay');
-            while (clickOverlay.firstChild) {
-                clickOverlay.removeChild(clickOverlay.firstChild);
-            }
-
-            alert('Form submitted!');
-        };
+};
     </script>
     <a href="index.html" class="submit-button" style="text-decoration: none; display: block; text-align: center;">Back</a>
 </body>
