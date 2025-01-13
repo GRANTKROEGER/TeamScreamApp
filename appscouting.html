@@ -15,6 +15,92 @@
             box-sizing: border-box;
             background-color: #ffffff;
         }
+        .infinite-list-container {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+        .infinite-list-wrapper {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: flex-start; /* Align items at the top */
+    }
+
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Stack items vertically */
+            margin-left: 20px; /* Add space between list and input group */
+        }
+
+        .infinite-list-select {
+            padding: 10px; /* Increase padding for larger size */
+            font-size: 18px; /* Increase font size */
+            border-radius: 4px; /* Optional: adjust border radius */
+            width: 100px; /* Optional: set a specific width */
+            border-radius: 10px;
+            background-color: none;
+        }
+
+        .list-container {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid none;
+        border-radius: 12px;
+        padding: 10px;
+        background-color: none;
+        border-color: none;
+        flex-grow: 1; /* Allow the list to take available space */
+    }
+
+        /* New CSS class for infinite list buttons */
+        .infinitelistbutton {
+            padding: 5px 10px;
+            font-size: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .infinitelistbutton:hover {
+            background-color: #45a049;
+        }
+
+        .list-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .delete-btn {
+            background-color: #ff4444;
+            padding: 2px 5px; /* Reduced padding */
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 20px; /* Reduced font size */
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+
+
+
+
+
+        .endgame-select {
+    padding: 15px; /* Increase padding for larger size */
+    font-size: 24px; /* Increase font size */
+    border-radius: 4px; /* Optional: adjust border radius */
+    width: 200px; /* Increase width */
+}
 
         h1, h2 {
             color: #000000;
@@ -57,18 +143,20 @@
             margin-top: 10px;
             font-size: 200px;
         }
+
         .color-buttons button {
-        padding: 10px 20px; /* Adjust the padding to make the buttons smaller */
-        font-size: 24px; /* Adjust the font size to make the text smaller */
-        min-width: 80px; /* Set a smaller minimum width for the buttons */
-        min-height: 60px; /* Set a smaller minimum height for the buttons */
-        position: relative;
-        z-index: 10;
+            padding: 10px 20px;
+            font-size: 24px;
+            min-width: 80px;
+            min-height: 60px;
+            position: relative;
+            z-index: 10;
         }
+
         #click-overlay {
-    position: relative;
-    /* Ensure this covers only the image area */
-}
+            position: relative;
+        }
+
         button:hover {
             background-color: #d8ce44d5;
         }
@@ -127,10 +215,8 @@
             border-radius: 25px;
             cursor: pointer;
             font-size: 40px;
-            
             display: block;
             margin: 20px auto;
-
         }
 
         .submit-button:hover {
@@ -161,7 +247,7 @@
                 padding: 20px 25px;
                 font-size: 50px;
             }
-           
+
             .form-group div[style*="display: flex"] button {
                 padding: 15px 10px;
                 font-size: 24px;
@@ -179,6 +265,7 @@
                 min-height: 50px;
             }
         }
+
     </style>
 </head>
 <body>
@@ -192,264 +279,224 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
     <script>
 
-let lastAddedDot = null;
+function createInfiniteList(listId) {
+    console.log(`Creating infinite list for ${listId}`); // Debugging line
+    const container = document.createElement('div');
+    container.className = 'infinite-list-container';
 
+    // Create a label for the infinite list
+    const label = document.createElement('label');
+    label.textContent = listId === 'auton' ? 'Auto Coral Scores' : 'Teleop Coral Scores';
+    label.style.fontWeight = 'bold';
+    label.style.fontSize = '1.1em';
+    label.style.marginBottom = '5px';
+    label.style.display = 'block';
 
-function changeDotColor(color) {
-    if (lastAddedDot) {
-        // Check if the click occurred outside the clickable image area
-        const clickOverlay = document.getElementById('click-overlay');
-        if (!clickOverlay.contains(event.target)) {
-            lastAddedDot.style.backgroundColor = color;
-            if (color === 'green') {
-                // Add data to QR code for score with x and y coordinates
-                const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
-                const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
-                const data = `Make,${x},${y};`;
-                updateQRCodeData(data);
-            } else if (color === 'yellow') {
-                // Add data to QR code for pick up with x and y coordinates
-                const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
-                const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
-                const data = `Pickup,${x},${y};`;
-                updateQRCodeData(data);
-            } else if (color === 'red') {
-                // Add data to QR code for miss with x and y coordinates
-                const x = lastAddedDot.offsetLeft + lastAddedDot.offsetWidth / 2;
-                const y = lastAddedDot.offsetTop + lastAddedDot.offsetHeight / 2;
-                const data = `Miss,${x},${y};`;
-                updateQRCodeData(data);
+    // Append the label to the container
+    container.appendChild(label);
+
+    // Create a wrapper for the list and input group
+    const wrapper = document.createElement('div');
+    wrapper.className = 'infinite-list-wrapper';
+
+    const listDiv = document.createElement('div');
+    listDiv.id = `list-${listId}`;
+    listDiv.className = 'list-container';
+
+    const inputGroup = document.createElement('div');
+    inputGroup.className = 'input-group';
+
+    const shotResultSelect = document.createElement('select');
+    shotResultSelect.id = `shotResult-${listId}`;
+    shotResultSelect.className = 'infinite-list-select';
+    shotResultSelect.innerHTML = `
+        <option value="Made">Made</option>
+        <option value="Miss">Miss</option>
+    `;
+
+    const shotLocationSelect = document.createElement('select');
+shotLocationSelect.id = `shotLocation-${listId}`;
+shotLocationSelect.className = 'infinite-list-select';
+shotLocationSelect.innerHTML = `
+    <option value="L1">L1</option>
+    <option value="L2">L2</option>
+    <option value="L3">L3</option>
+    <option value="L4">L4</option>
+    <option value="BAR">BARGE</option> <!-- Changed from Barge to BAR -->
+    <option value="PRO">PROCESSOR</option> <!-- Changed from Processor to PRO -->
+`;
+
+    const applyButton = document.createElement('button');
+    applyButton.className = 'infinitelistbutton';
+    applyButton.textContent = 'Apply';
+    applyButton.type = 'button';
+    applyButton.onclick = () => addToList(listId);
+
+    inputGroup.appendChild(shotResultSelect);
+    inputGroup.appendChild(shotLocationSelect);
+    inputGroup.appendChild(applyButton);
+
+    // Append the list and input group to the wrapper
+    wrapper.appendChild(listDiv);
+    wrapper.appendChild(inputGroup);
+
+    // Append the wrapper to the container
+    container.appendChild(wrapper);
+
+    console.log(container); // Log the container to verify its structure
+
+    return container;
+}
+
+function createFormElement(item) {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    const label = document.createElement('label');
+    label.textContent = item.name;
+    div.appendChild(label);
+
+    let input;
+    switch (item.type) {
+        case 'scouter':
+        case 'event':
+        case 'match':
+        case 'team':
+            input = document.createElement('input');
+            input.type = 'text';
+            input.name = item.code;
+            input.required = item.required === 'true';
+            if (item.defaultValue) input.value = item.defaultValue;
+            if (item.size) input.size = item.size;
+            if (item.maxSize) input.maxLength = item.maxSize;
+            break;
+        case 'level':
+        case 'robot':
+        case 'radio':
+            if (['e_end', 'e_CPU', 'e_APU', 'e_deadBot'].includes(item.code)) {
+                input = document.createElement('select');
+                input.name = item.code;
+                input.className = 'endgame-select';
+                input.required = item.required === 'true'; // Make select required
+                for (let key in item.choices) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = item.choices[key];
+                    if (key === item.defaultValue) option.selected = true;
+                    input.appendChild(option);
+                }
             } else {
-                // Handle other colors if needed
+                input = document.createElement('div');
+                input.className = 'radio-group';
+                let firstRadio = true;
+                for (let key in item.choices) {
+                    const radioDiv = document.createElement('div');
+                    radioDiv.className = 'radio-option';
+                    const radioLabel = document.createElement('label');
+                    radioLabel.textContent = item.choices[key];
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = item.code;
+                    radioInput.value = key;
+                    radioInput.id = `${item.code}_${key}`;
+                    if (firstRadio && item.required === 'true') {
+                        radioInput.required = true; // Make radio group required
+                        firstRadio = false;
+                    }
+                    if (key === item.defaultValue) radioInput.checked = true;
+                    radioDiv.appendChild(radioLabel);
+                    radioDiv.appendChild(radioInput);
+                    input.appendChild(radioDiv);
+                }
             }
-        } else {
-            console.log('Click only allowed outside the clickable image area.');
-        }
-    } else {
-        console.log('No dot element to change color.');
+            break;
+        case 'bool':
+            input = document.createElement('input');
+            input.type = 'checkbox';
+            input.name = item.code;
+            input.required = item.required === 'true'; // Make checkbox required
+            break;
+        case 'counter':
+            // Counter logic remains unchanged
+            break;
+        case 'text':
+            input = document.createElement('textarea');
+            input.name = item.code;
+            input.required = item.required === 'true'; // Make textarea required
+            if (item.size) input.cols = item.size;
+            if (item.maxSize) input.maxLength = item.maxSize;
+            break;
     }
+    if (input) div.appendChild(input);
+    return div;
 }
 
 
-function updateQRCodeData(data) {
-    const inputField = document.getElementById('sl-input'); // Assuming the input field for clickable image data has an ID 'sl-input'
-    inputField.value += data;
-}
 
-var config_data = `{
+
+        function createSection(sectionName, items) {
+    const section = document.createElement('section');
+    const heading = document.createElement('h2');
+    heading.textContent = sectionName;
+    section.appendChild(heading);
+
+    items.forEach(item => {
+        const formElement = createFormElement(item);
+        section.appendChild(formElement);
+    });
+
+    // Always append the infinite list for the "Teleoperated" and "Autonomous" sections
+    if (sectionName === 'Autonomous') {
+        section.appendChild(createInfiniteList('auton'));
+    } else if (sectionName === 'Teleoperated') {
+        section.appendChild(createInfiniteList('teleop'));
+    }
+
+    return section;
+}
+///////////   ////////////    //          //   //////////   ////////////    //////////////
+//            //        //    ////        //   //               //          // 
+//            //        //    //  //      //   //               //          //
+//            //        //    //    //    //   ////////         //          //      //////
+//            //        //    //      //  //   //               //          //          //
+//            //        //    //        ////   //               //          //          //
+///////////   ////////////    //          //   //           ///////////     //////////////
+        
+
+const config_data = `{
     "dataFormat": "tsv",
     "title": "SCREAM App",
     "page_title": "Team SCREAM Scouting App",
     "checkboxAs": "10",
     "prematch": [
-        { "name": "Scouters First Name", "code": "s", "type": "scouter", "size": 5, "maxSize": 999, "required": "true" },
-        { "name": "Match #", "code": "m", "type": "match", "min": 1, "max": 150, "required": "true" },
-        { "name": "Robot", "code": "r", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true" },
-        { "name": "Team #", "code": "t", "type": "team", "min": 1, "max": 99999 }
+        { "name": "Scouters First Name", "code": "n", "type": "scouter", "size": 5, "maxSize": 999, "required": "true" },
+        { "name": "Match #", "code": "Match", "type": "match", "min": 1, "max": 150, "required": "true" },
+        { "name": "Robot", "code": "Robot", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true" },
+        { "name": "Team #", "code": "Team", "type": "team", "min": 1, "max": 99999 }
     ],
     "auton": [
-        { "name": "Leave Starting Zone", "code": "a_leaveStarting", "type": "bool" },  
-        { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
-        { "name": "Auto Mapping", "code": "sl", "type": "clickable_image", "imageUrl": "https://i.imgur.com/kw2QR1S.png", "clickRestriction": "none", "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72", "shape": "circle 5 black red true",
-                    "colorButtons": [
-                { "name": "Score", "color": "green" },
-                { "name": "Pickup", "color": "yellow" },
-                { "name": "Miss", "color": "red" }
-            ]
-        }
+        { "name": "Leave Starting Zone", "code": "leaveStarting", "type": "bool" }
     ],
-    "teleop": [
-        { "name": "Notes Picked Up", "code": "a_PickedUp", "type": "counter" },
-        { "name": "Speaker Score", "code": "tss", "type": "counter" },
-        { "name": "Speaker Misses", "code": "t_SpeakerMiss", "type": "counter" },
-        { "name": "Amp Score", "code": "tas", "type": "counter" },
-        { "name": "Amp Misses", "code": "t_AmpMiss", "type": "counter" },
-        {
-            "name": "Shooting Locations",
-            "code": "sl",
-            "type": "clickable_image",
-            "imageUrl": "https://i.imgur.com/kw2QR1S.png",
-            "clickRestriction": "none",
-            "allowableResponses": "1 12 13 24 25 36 37 48 49 60 61 72",
-            "shape": "circle 5 black red true"
-        }
-    ],
+    "teleop": [],
     "endgame": [
-        { "name": "Ended", "code": "fs", "type": "radio", "choices": { "s": "Parked", "f": "Climbed", "x": "Neither" } },
-        { "name": "Picked Up", "code": "pu", "type": "radio", "choices": { "s": "Source", "f": "Floor", "b": "Both", "x": "Neither"}},
-        { "name": "Harmony", "code": "e_Harmony", "type": "radio", "choices": { "x": "None", "2": "2", "3": "3" } },
-        { "name": "Scored Trap", "code": "nit", "type": "counter" },
-        { "name": "Deadbot", "code": "e_deadBot", "type": "radio", "choices": { "n": "None", "q": "Quarter", "h": "Half", "t": "Three Fourths", "f": "Full" } }
+        { "name": "Ended", "code": "Ended", "type": "radio", "choices": { "p": "Parked", "d": "Climbed Deep", "s": "Climbed Shallow", "x": "Neither" } },
+        { "name": "Coral Picked Up", "code": "Coral", "type": "radio", "choices": { "source": "Source", "floor": "Floor", "both": "Both", "x": "Neither" } },
+        { "name": "Algae Picked Up", "code": "Algae", "type": "radio", "choices": { "reef": "Reef", "floor": "Floor", "both": "Both", "x": "Neither" } },
+        { "name": "Deadbot", "code": "deadBot", "type": "radio", "choices": { "none": "None", "quarter": "Quarter", "half": "Half", "three fourths": "Three Fourths", "full": "Full" } }
     ],
     "postmatch": [
-        {"name": "Driver Skill", "code": "dS", "type": "radio", "choices": {"Not Good": "Not Good", "moderate": "Moderate","Good": "Good" }},
-        {"name": "Defense Rating", "code": "dF", "type": "radio", "choices": {"Not Good": "Not Good", "moderate": "Moderate","Good": "Good", "x": "N/A" }},
-        {"name": "Speed Rating", "code": "sR", "type": "radio", "choices": {"Slow": "Slow", "Average": "Average","Fast": "Fast","Very Fast": "Very Fast" }},
-        { "name": "Tippy", "code": "tippy", "type": "bool" }
+        { "name": "Driver Skill", "code": "driver", "type": "radio", "choices": { "Not Good": "Not Good", "moderate": "Moderate", "Good": "Good" } },
+        { "name": "Defense Rating", "code": "defense", "type": "radio", "choices": { "Not Good": "Not Good", "moderate": "Moderate", "Good": "Good", "x": "N/A" } },
+        { "name": "Speed Rating", "code": "speed", "type": "radio", "choices": { "Slow": "Slow", "Average": "Average", "Fast": "Fast", "Very Fast": "Very Fast" } }
     ]
 }`;
+
+//        { "name": "Human Player Score", "code": "HPScore", "type": "counter" },
+//        { "name": "Human Player Miss", "code": "HPMiss", "type": "counter" }
 
         const config = JSON.parse(config_data);
         const form = document.getElementById('scouting-form');
 
         document.getElementById('page-title').textContent = config.page_title;
-
-        function createFormElement(item) {
-            const div = document.createElement('div');
-            div.className = 'form-group';
-            const label = document.createElement('label');
-            label.textContent = item.name;
-            
-            // Add underline class to specified labels 
-            const underlinedLabels = [];
-            if (underlinedLabels.includes(item.name)) {
-                label.classList.add('underline');
-            }
-            
-            div.appendChild(label);
-
-            let input;
-            switch (item.type) {
-                case 'scouter':
-                case 'event':
-                case 'match':
-                case 'team':
-                    input = document.createElement('input');
-                    input.type = 'text';
-                    input.name = item.code;
-                    input.required = item.required === 'true';
-                    if (item.defaultValue) input.value = item.defaultValue;
-                    if (item.size) input.size = item.size;
-                    if (item.maxSize) input.maxLength = item.maxSize;
-                    break;
-                case 'level':
-                case 'robot':
-                case 'radio':
-                    input = document.createElement('div');
-                    input.className = 'radio-group';
-                    for (let key in item.choices) {
-                        const radioDiv = document.createElement('div');
-                        radioDiv.className = 'radio-option';
-                        const radioLabel = document.createElement('label');
-                        radioLabel.textContent = item.choices[key];
-                        const radioInput = document.createElement('input');
-                        radioInput.type = 'radio';
-                        radioInput.name = item.code;
-                        radioInput.value = key;
-                        radioInput.id = `${item.code}_${key}`;
-                        if (key === item.defaultValue) radioInput.checked = true;
-                        radioDiv.appendChild(radioLabel);
-                        radioDiv.appendChild(radioInput);
-                        input.appendChild(radioDiv);
-                    }
-                    break;
-                case 'bool':
-                    input = document.createElement('input');
-                    input.type = 'checkbox';
-                    input.name = item.code;
-                    break;
-                case 'counter':
-                    input = document.createElement('div');
-                    input.style.display = 'flex';
-                    input.style.alignItems = 'center';
-                    input.style.justifyContent = 'center';
-                    input.style.gap = '10px';
-
-                    const decreaseBtn = document.createElement('button');
-                    decreaseBtn.textContent = '-';
-                    decreaseBtn.type = 'button';
-                    decreaseBtn.style.padding = '5px 10px';
-                    decreaseBtn.style.fontSize = '18px';
-
-                    const increaseBtn = document.createElement('button');
-                    increaseBtn.textContent = '+';
-                    increaseBtn.type = 'button';
-                    increaseBtn.style.padding = '5px 10px';
-                    increaseBtn.style.fontSize = '18px';
-
-                    const counterDisplay = document.createElement('span');
-                    counterDisplay.textContent = '0';
-                    counterDisplay.style.fontSize = '40px';
-                    counterDisplay.style.minWidth = '100px';
-                    counterDisplay.style.textAlign = 'center';
-
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = item.code;
-                    hiddenInput.value = '0';
-
-                    decreaseBtn.onclick = () => {
-                        let value = parseInt(hiddenInput.value);
-                        if (value > 0) {
-                            value--;
-                            hiddenInput.value = value;
-                            counterDisplay.textContent = value;
-                        }
-                    };
-                    increaseBtn.onclick = () => {
-                        let value = parseInt(hiddenInput.value);
-                        value++;
-                        hiddenInput.value = value;
-                        counterDisplay.textContent = value;
-                    };
-
-                    input.appendChild(decreaseBtn);
-                    input.appendChild(counterDisplay);
-                    input.appendChild(increaseBtn);
-                    input.appendChild(hiddenInput);
-                    break;
-                case 'text':
-                    input = document.createElement('textarea');
-                    input.name = item.code;
-                    if (item.size) input.cols = item.size;
-                    if (item.maxSize) input.maxLength = item.maxSize;
-                    break;
-
-                    case 'clickable_image':
-            input = document.createElement('div');
-            input.innerHTML = `
-                <div style="position: relative; display: inline-block;">
-                    <img id="field-image" src="${item.imageUrl}" alt="Field Image" style="width: 100%; max-width: 800px; height: auto;">
-                    <div id="click-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
-                </div>
-                <input type="hidden" name="${item.code}" id="${item.code}-input">
-            `;
-            input.querySelector('#click-overlay').addEventListener('click', function(event) {
-                const rect = event.target.getBoundingClientRect();
-                const x = Math.round(event.clientX - rect.left);
-                const y = Math.round(event.clientY - rect.top);
-                const radius = parseInt(item.shape.split(' ')[1]);
-                const circle = document.createElement('div');
-                circle.style.position = 'absolute';
-                circle.style.width = `${radius * 2}px`;
-                circle.style.height = `${radius * 2}px`;
-                circle.style.borderRadius = '50%';
-                circle.style.backgroundColor = 'white';
-                circle.style.left = `${x - radius}px`;
-                circle.style.top = `${y - radius}px`;
-                circle.id = 'dot'; // Set the id of the dot element to 'dot'
-                event.target.appendChild(circle);
-                const inputField = document.getElementById(`${item.code}-input`);
-                inputField.value += `${x},${y};`;
-
-                lastAddedDot = circle; // Update the reference to the last added dot element
-            });
-            break;
-            }
-            if (input) div.appendChild(input);
-            return div;
-        }
-
-        function createSection(sectionName, items) {
-            const section = document.createElement('section');
-            const heading = document.createElement('h2');
-            heading.textContent = sectionName;
-            section.appendChild(heading);
-            items.forEach(item => {
-                section.appendChild(createFormElement(item));
-            });
-            return section;
-        }
 
         form.appendChild(createSection('Pre-match', config.prematch));
         form.appendChild(createSection('Autonomous', config.auton));
@@ -457,146 +504,168 @@ var config_data = `{
         form.appendChild(createSection('End Game', config.endgame));
         form.appendChild(createSection('Post-match', config.postmatch));
 
-        const submitButton = document.getElementById('submit-button');
+        function addToList(listId) {
+            const result = document.getElementById(`shotResult-${listId}`).value;
+            const location = document.getElementById(`shotLocation-${listId}`).value;
+            
+            const listDiv = document.getElementById(`list-${listId}`);
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            
+            const text = document.createElement('span');
+            //where to change the name for the list item
+            text.textContent = `${result} score on ${location}`;
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() {
+                listDiv.removeChild(item);
+            };
+            
+            item.appendChild(text);
+            item.appendChild(deleteBtn);
+            listDiv.appendChild(item);
+        }
 
-        const greenButton = document.getElementById('green-button');
+        function collectListData(listId) {
+    const listDiv = document.getElementById(`list-${listId}`);
+    const items = listDiv.getElementsByClassName('list-item');
+    const dataMap = {};
 
-        document.getElementById('click-overlay').addEventListener('click', function(event) {
-    // Check if the click is within the bounds of the image
-    const clickOverlay = document.getElementById('click-overlay');
-    const rect = clickOverlay.getBoundingClientRect();
+    Array.from(items).forEach(item => {
+        const text = item.querySelector('span').textContent;
+        const [result, location] = text.split(' score on '); // Ensure this matches the format in `addToList`
+        const key = `${result.substring(0, 2).toUpperCase()} ${location}`;
+        dataMap[key] = (dataMap[key] || 0) + 1;
+    });
 
-    if (event.clientY < rect.bottom) {
-        // Place a dot only if the click is within the image bounds
-        placeDot(event.clientX, event.clientY);
-    }
-});
+    console.log(`Collected data for ${listId}:`, dataMap); // Debugging line
 
-let addedDots = [];
-
-
-// Function to add a dot at a specific position
-function placeDot(x, y) {
-    const dot = document.createElement('div');
-    dot.className = 'dot';
-    dot.style.left = `${x}px`;
-    dot.style.top = `${y}px`;
-    document.getElementById('click-overlay').appendChild(dot);
-    
-    // Add the dot to the array of added dots
-    addedDots.push(dot); // Add the dot element to the addedDots array
-
-    // Debugging: Log the addedDots array to check if the dot is added
-    console.log(addedDots);
+    // Always include the count, even if it's 1
+    return Object.entries(dataMap).map(([key, count]) => `${key} ${count}`).join(', ');
 }
-        function createColorButtons(colorButtons) {
-    if (Array.isArray(colorButtons)) {
-        const colorButtonsContainer = document.createElement('div');
-        colorButtonsContainer.className = 'color-buttons';
-
-        colorButtons.forEach(button => {
-            const colorButton = document.createElement('button');
-            colorButton.textContent = button.name;
-            colorButton.style.backgroundColor = button.color;
-            colorButton.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevent the event from bubbling up to the clickable image
-                changeDotColor(button.color);
-                event.preventDefault();
-            });
-            colorButtonsContainer.appendChild(colorButton);
-        });
-
-        // Append color buttons after the clickable image
-        const clickOverlay = document.getElementById('click-overlay');
-        clickOverlay.parentNode.insertBefore(colorButtonsContainer, clickOverlay.nextSibling);
-    } else {
-        console.error('Color buttons data is missing or invalid for the item:', colorButtons);
-    }
-}
-
 
 
 document.addEventListener('DOMContentLoaded', function() {
-
-
-// Function to delete the most recently added dot
-function deleteLastDot() {
-    if (addedDots.length > 0) {
-        const lastDot = addedDots.pop(); // Remove the last dot from the array
-        lastDot.remove(); // Remove the last added dot element from the DOM
-        lastAddedDot = addedDots[addedDots.length - 1] || null;
-        console.log('Dot deleted. Updated addedDots array:', addedDots); // Log the updated array
-    } else {
-        console.log('No dots to delete.');
-    }
-}
-
-
-// Add a new button for deleting the most recently placed dot
-const deleteButton = document.createElement('button');
-deleteButton.textContent = 'Delete Last Dot';
-deleteButton.style.backgroundColor = 'red'; // Choose a color for the delete button
-deleteButton.addEventListener('click', () => {
-    if (lastAddedDot) {
-        lastAddedDot.remove(); // Remove the last added dot element
-        lastAddedDot = null; // Reset the reference to the last added dot
-        event.preventDefault();
-        // You can also update the QR code data or perform any other necessary actions here
-    } else {
-        console.log('No dot element to delete.');
-    }
-
+    const submitButton = document.getElementById('submit-button');
     
-});
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
 
-// Event listener for the delete button to delete the most recently added dot
-deleteButton.addEventListener('click', deleteLastDot);
+        // Validate form fields, excluding "Leave Starting Zone"
+        if (!validateForm()) {
+            alert('Please fill out all required fields.');
+            return;
+        }
 
-// Append the delete button after the color buttons
-const colorButtonsContainer = document.querySelector('.color-buttons');
-colorButtonsContainer.appendChild(deleteButton);
-});
+        // Collect form data
+        const formData = new FormData(form);
+        let dataString = '';
+        let leaveStartingIncluded = false;
 
-// Loop through all sections of the config object
-for (const section of Object.keys(config)) {
-    if (Array.isArray(config[section])) {
-        config[section].forEach(item => {
-            if (item.type === 'clickable_image' && item.colorButtons) {
-                createColorButtons(item.colorButtons);
+        for (let [key, value] of formData.entries()) {
+            if (key === 'n' || key === 'Match' || key === 'Robot' || key === 'Team') {
+                // Append only the value without the key for specific fields
+                dataString += `${value};`;
+
+                // Check if the current key is 'Team' to append 'leaveStarting' next
+                if (key === 'Team' && !leaveStartingIncluded) {
+                    const leaveStartingValue = formData.get('leaveStarting') === 'on' ? 'true' : 'false';
+                    dataString += `${leaveStartingValue};`; // Append only the value
+                    leaveStartingIncluded = true;
+
+                    // Append AutonList and TeleopList immediately after leaveStarting
+                    const autonData = collectListData('auton');
+                    console.log('Auton data:', autonData); // Debugging line
+                    dataString += `${autonData};`; // Append only the value
+
+                    const teleopData = collectListData('teleop');
+                    console.log('Teleop data:', teleopData); // Debugging line
+                    dataString += `${teleopData};`; // Append only the value
+                }
+                continue;
+            }
+
+            // Skip 'leaveStarting' as it is handled after 'Team'
+            if (key === 'leaveStarting') {
+                continue;
+            }
+
+            // Append only the value without the key
+            dataString += `${value};`;
+        }
+
+        // Ensure leaveStarting is included with a default value if not present
+        if (!leaveStartingIncluded) {
+            dataString += `stay;`; // Default to 'stay' if not set
+
+            // Append AutonList and TeleopList if leaveStarting was not included
+            const autonData = collectListData('auton');
+            dataString += `${autonData};`; // Append only the value
+
+            const teleopData = collectListData('teleop');
+            dataString += `${teleopData};`; // Append only the value
+        }
+
+        console.log('Final data string:', dataString); // Debugging line
+
+        // Generate the QR code with the collected data
+        generateQRCode(dataString);
+
+        // Reset the form after submission
+        resetForm();
+    });
+
+    function validateForm() {
+        let isValid = true;
+        const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
+
+        requiredFields.forEach(field => {
+            if (field.name !== 'leaveStarting' && !field.value.trim()) {
+                isValid = false;
+                field.style.borderColor = 'red'; // Optional: highlight the empty field
+                console.log(`Field ${field.name} is required but not filled.`); // Debugging line
+            } else {
+                field.style.borderColor = ''; // Reset border color if filled
             }
         });
-    }
-}
 
-submitButton.addEventListener('click', function(event) {
-    event.preventDefault(); // Prevent form submission
-
-    // Collect form data
-    const formData = new FormData(form);
-    let dataString = '';
-    for (let [key, value] of formData.entries()) {
-        dataString += `${key}:${value};`;
+        return isValid;
     }
 
-    // Generate the QR code with the collected data
-    generateQRCode(dataString);
+    function generateQRCode(data) {
+        const qrContainer = document.getElementById('qrcode');
+        qrContainer.innerHTML = ''; // Clear any existing QR code
+
+        new QRCode(qrContainer, {
+            text: data,
+            width: 256,  // Increased width
+            height: 256, // Increased height
+            correctLevel: QRCode.CorrectLevel.L  // Lower error correction level
+        });
+    }
+
+    function resetForm() {
+        // Reset all input fields
+        form.reset();
+
+        // Clear all list items in the infinite lists
+        document.getElementById('list-auton').innerHTML = '';
+        document.getElementById('list-teleop').innerHTML = '';
+
+        // Reset counters to 0
+        const counters = form.querySelectorAll('input[type="hidden"]');
+        counters.forEach(counter => {
+            counter.value = '0';
+            counter.previousElementSibling.textContent = '0'; // Update the display span
+        });
+    }
 });
 
-function generateQRCode(data) {
-    const qrContainer = document.getElementById('qrcode');
-    qrContainer.innerHTML = ''; // Clear any existing QR code
 
-    // Compress the data
-    const compressedData = LZString.compressToEncodedURIComponent(data);
 
-    new QRCode(qrContainer, {
-        text: compressedData,
-        width: 256,  // Increased width
-        height: 256, // Increased height
-        correctLevel: QRCode.CorrectLevel.L  // Lower error correction level
-    });
-};
-    </script>
+</script>
     <a href="index.html" class="submit-button" style="text-decoration: none; display: block; text-align: center;">Back</a>
 </body>
 </html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .infinitelistbutton {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .infinitelistbutton:hover {
+            background-color: #45a049;
+        }
+        .list-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .delete-btn {
+            background-color: #ff4444;
+            padding: 4px 8px;
+        }
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-group">
+            <select id="shotResult">
+                <option value="Made">Made</option>
+                <option value="Miss">Miss</option>
+            </select>
+            <select id="shotLocation">
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+                <option value="L3">L3</option>
+                <option value="L4">L4</option>
+            </select>
+            <button class="infinitelistbutton" onclick="addToList()">Apply</button>
+        </div>
+        <div id="list"></div>
+    </div>
+
+    <script>
+        function addToList() {
+            const result = document.getElementById('shotResult').value;
+            const location = document.getElementById('shotLocation').value;
+            
+            const listDiv = document.getElementById('list');
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            
+            const text = document.createElement('span');
+            text.textContent = `${result} shot from ${location}`;
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() {
+                listDiv.removeChild(item);
+            };
+            
+            item.appendChild(text);
+            item.appendChild(deleteBtn);
+            listDiv.appendChild(item);
+        }
+    </script>
+</body>
+</html>
