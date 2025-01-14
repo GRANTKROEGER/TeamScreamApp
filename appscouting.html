@@ -243,7 +243,7 @@ function createInfiniteList(listId) {
 
     // Create a label for the infinite list
     const label = document.createElement('label');
-    label.textContent = listId === 'auton' ? 'Auto Coral Scores' : 'Teleop Coral Scores';
+    label.textContent = listId === 'auton' ? 'Auto Scores' : 'Teleop Scores';
     label.style.fontWeight = 'bold';
     label.style.fontSize = '1.1em';
     label.style.marginBottom = '5px';
@@ -431,11 +431,11 @@ const config_data = `{
     "teleop": [],
     "endgame": [
         { "name": "Ended", "code": "Ended", "type": "radio", "choices": { "p": "Parked", "d": "Climbed Deep", "s": "Climbed Shallow", "x": "Neither" } },
-        { "name": "Coral Picked Up", "code": "Coral", "type": "radio", "choices": { "source": "Source", "floor": "Floor", "both": "Both", "x": "Neither" } },
-        { "name": "Algae Picked Up", "code": "Algae", "type": "radio", "choices": { "reef": "Reef", "floor": "Floor", "both": "Both", "x": "Neither" } },
         { "name": "Deadbot", "code": "deadBot", "type": "radio", "choices": { "none": "None", "quarter": "Quarter", "half": "Half", "three fourths": "Three Fourths", "full": "Full" } }
     ],
     "postmatch": [
+        { "name": "Algae Picked Up", "code": "Algae", "type": "radio", "choices": { "reef": "Reef", "floor": "Floor", "both": "Both", "x": "Neither" } },
+        { "name": "Coral Picked Up", "code": "Coral", "type": "radio", "choices": { "source": "Source", "floor": "Floor", "both": "Both", "x": "Neither" } },
         { "name": "Driver Skill", "code": "driver", "type": "radio", "choices": { "Not Good": "Not Good", "moderate": "Moderate", "Good": "Good" } },
         { "name": "Defense Rating", "code": "defense", "type": "radio", "choices": { "Not Good": "Not Good", "moderate": "Moderate", "Good": "Good", "x": "N/A" } },
         { "name": "Speed Rating", "code": "speed", "type": "radio", "choices": { "Slow": "Slow", "Average": "Average", "Fast": "Fast", "Very Fast": "Very Fast" } }
