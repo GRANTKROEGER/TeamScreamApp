@@ -16,43 +16,37 @@
             background-color: #ffffff;
         }
         .infinite-list-container {
-        margin-bottom: 20px;
-        width: 100%;
-    }
-
+            margin-bottom: 20px;
+            width: 100%;
+        }
         .infinite-list-wrapper {
-        display: flex;
-        justify-content: center; /* Center horizontally */
-        align-items: flex-start; /* Align items at the top */
-    }
-
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
         .input-group {
             display: flex;
-            flex-direction: column; /* Stack items vertically */
-            margin-left: 20px; /* Add space between list and input group */
+            flex-direction: column;
+            margin-left: 20px;
         }
-
         .infinite-list-select {
-            padding: 10px; /* Increase padding for larger size */
-            font-size: 18px; /* Increase font size */
-            border-radius: 4px; /* Optional: adjust border radius */
-            width: 100px; /* Optional: set a specific width */
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 4px;
+            width: 100px;
             border-radius: 10px;
             background-color: none;
         }
-
         .list-container {
-        max-height: 400px;
-        overflow-y: auto;
-        border: 1px solid none;
-        border-radius: 12px;
-        padding: 10px;
-        background-color: none;
-        border-color: none;
-        flex-grow: 1; /* Allow the list to take available space */
-    }
-
-        /* New CSS class for infinite list buttons */
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid none;
+            border-radius: 12px;
+            padding: 10px;
+            background-color: none;
+            border-color: none;
+            flex-grow: 1;
+        }
         .infinitelistbutton {
             padding: 5px 10px;
             font-size: 20px;
@@ -62,11 +56,9 @@
             border-radius: 4px;
             cursor: pointer;
         }
-
         .infinitelistbutton:hover {
             background-color: #45a049;
         }
-
         .list-item {
             padding: 10px;
             margin: 5px 0;
@@ -75,49 +67,37 @@
             display: flex;
             justify-content: space-between;
         }
-
         .delete-btn {
             background-color: #ff4444;
-            padding: 2px 5px; /* Reduced padding */
+            padding: 2px 5px;
             border: none;
             border-radius: 4px;
             color: white;
             cursor: pointer;
-            font-size: 20px; /* Reduced font size */
+            font-size: 20px;
         }
-
         .delete-btn:hover {
             background-color: #cc0000;
         }
-
-
-
-
-
-
         .endgame-select {
-    padding: 15px; /* Increase padding for larger size */
-    font-size: 24px; /* Increase font size */
-    border-radius: 4px; /* Optional: adjust border radius */
-    width: 200px; /* Increase width */
-}
-
+            padding: 15px;
+            font-size: 24px;
+            border-radius: 4px;
+            width: 200px;
+        }
         h1, h2 {
             color: #000000;
             text-align: center;
         }
-
         .form-group {
             margin-bottom: 15px;
         }
-
         .form-group > label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             font-size: 1.1em;
         }
-
         input[type="text"],
         input[type="number"],
         textarea {
@@ -128,7 +108,6 @@
             box-sizing: border-box;
             font-size: 40px;
         }
-
         button {
             background-color: #d8ce44;
             color: white;
@@ -143,7 +122,6 @@
             margin-top: 10px;
             font-size: 200px;
         }
-
         .color-buttons button {
             padding: 10px 20px;
             font-size: 24px;
@@ -152,22 +130,18 @@
             position: relative;
             z-index: 10;
         }
-
         #click-overlay {
             position: relative;
         }
-
         button:hover {
             background-color: #d8ce44d5;
         }
-
         .radio-group {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
         }
-
         .radio-option {
             display: flex;
             flex-direction: column;
@@ -175,38 +149,31 @@
             text-align: center;
             min-width: 100%;
         }
-
         .radio-option label {
             font-weight: normal;
             font-size: 1em;
         }
-
         .radio-option input[type="radio"] {
             margin-top: 5px;
             min-height: 50px;
             min-width: 50px;
         }
-
         .logo {
             max-width: 200px;
             margin: 20px auto;
             display: block;
         }
-
         #qrcode {
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
-
         .underline {
             text-decoration: underline;
         }
-
         section {
             margin-bottom: 160px;
         }
-
         .submit-button {
             background-color: #d8ce44;
             color: white;
@@ -218,54 +185,44 @@
             display: block;
             margin: 20px auto;
         }
-
         .submit-button:hover {
             background-color: #d8ce44d5;
         }
-
         @media (max-width: 600px) { 
             body {
                 padding: 15px 20px;
                 font-size: 24px;
             }
-
             .radio-group {
                 flex-direction: column;
             }
-
             .radio-option {
                 flex-direction: row;
                 justify-content: space-between;
                 width: 100%;
             }
-
             .radio-option input[type="radio"] {
                 margin-top: 0;
             }
-
             .form-group button {
                 padding: 20px 25px;
                 font-size: 50px;
             }
-
             .form-group div[style*="display: flex"] button {
                 padding: 15px 10px;
                 font-size: 24px;
                 width: 40px;
                 height: 60px;
             }
-
             .form-group div[style*="display: flex"] span {
                 font-size: 50px;
                 min-width: 40px;
             }
-
             input[type="checkbox"] {
                 min-width: 50px;
                 min-height: 50px;
             }
         }
-
     </style>
 </head>
 <body>
@@ -306,35 +263,33 @@ function createInfiniteList(listId) {
     const inputGroup = document.createElement('div');
     inputGroup.className = 'input-group';
 
-    const shotResultSelect = document.createElement('select');
-    shotResultSelect.id = `shotResult-${listId}`;
-    shotResultSelect.className = 'infinite-list-select';
-    shotResultSelect.innerHTML = `
-        <option value="Made">Made</option>
-        <option value="Miss">Miss</option>
+    const shotLocationSelect = document.createElement('select');
+    shotLocationSelect.id = `shotLocation-${listId}`;
+    shotLocationSelect.className = 'infinite-list-select';
+    shotLocationSelect.innerHTML = `
+        <option value="L1">L1</option>
+        <option value="L2">L2</option>
+        <option value="L3">L3</option>
+        <option value="L4">L4</option>
+        <option value="BAR">BARGE</option>
+        <option value="PRO">PROCESSOR</option>
     `;
 
-    const shotLocationSelect = document.createElement('select');
-shotLocationSelect.id = `shotLocation-${listId}`;
-shotLocationSelect.className = 'infinite-list-select';
-shotLocationSelect.innerHTML = `
-    <option value="L1">L1</option>
-    <option value="L2">L2</option>
-    <option value="L3">L3</option>
-    <option value="L4">L4</option>
-    <option value="BAR">BARGE</option> <!-- Changed from Barge to BAR -->
-    <option value="PRO">PROCESSOR</option> <!-- Changed from Processor to PRO -->
-`;
+    const makeButton = document.createElement('button');
+    makeButton.className = 'infinitelistbutton';
+    makeButton.textContent = 'Make';
+    makeButton.type = 'button';
+    makeButton.onclick = () => addToList(listId, 'Make');
 
-    const applyButton = document.createElement('button');
-    applyButton.className = 'infinitelistbutton';
-    applyButton.textContent = 'Apply';
-    applyButton.type = 'button';
-    applyButton.onclick = () => addToList(listId);
+    const missButton = document.createElement('button');
+    missButton.className = 'infinitelistbutton';
+    missButton.textContent = 'Miss';
+    missButton.type = 'button';
+    missButton.onclick = () => addToList(listId, 'Miss');
 
-    inputGroup.appendChild(shotResultSelect);
     inputGroup.appendChild(shotLocationSelect);
-    inputGroup.appendChild(applyButton);
+    inputGroup.appendChild(makeButton);
+    inputGroup.appendChild(missButton);
 
     // Append the list and input group to the wrapper
     wrapper.appendChild(listDiv);
@@ -354,6 +309,16 @@ function createFormElement(item) {
     const label = document.createElement('label');
     label.textContent = item.name;
     div.appendChild(label);
+
+    // Insert the image above the robot form element
+    if (item.code === 'Robot') {
+        const img = document.createElement('img');
+        img.src = 'field.png';
+        img.alt = 'Field Image';
+        img.style.maxWidth = '100%';
+        img.style.marginBottom = '10px';
+        div.appendChild(img);
+    }
 
     let input;
     switch (item.type) {
@@ -376,7 +341,7 @@ function createFormElement(item) {
                 input = document.createElement('select');
                 input.name = item.code;
                 input.className = 'endgame-select';
-                input.required = item.required === 'true'; // Make select required
+                input.required = item.required === 'true';
                 for (let key in item.choices) {
                     const option = document.createElement('option');
                     option.value = key;
@@ -399,7 +364,7 @@ function createFormElement(item) {
                     radioInput.value = key;
                     radioInput.id = `${item.code}_${key}`;
                     if (firstRadio && item.required === 'true') {
-                        radioInput.required = true; // Make radio group required
+                        radioInput.required = true;
                         firstRadio = false;
                     }
                     if (key === item.defaultValue) radioInput.checked = true;
@@ -413,15 +378,14 @@ function createFormElement(item) {
             input = document.createElement('input');
             input.type = 'checkbox';
             input.name = item.code;
-            input.required = item.required === 'true'; // Make checkbox required
+            input.required = item.required === 'true';
             break;
         case 'counter':
-            // Counter logic remains unchanged
             break;
         case 'text':
             input = document.createElement('textarea');
             input.name = item.code;
-            input.required = item.required === 'true'; // Make textarea required
+            input.required = item.required === 'true';
             if (item.size) input.cols = item.size;
             if (item.maxSize) input.maxLength = item.maxSize;
             break;
@@ -430,10 +394,7 @@ function createFormElement(item) {
     return div;
 }
 
-
-
-
-        function createSection(sectionName, items) {
+function createSection(sectionName, items) {
     const section = document.createElement('section');
     const heading = document.createElement('h2');
     heading.textContent = sectionName;
@@ -444,7 +405,6 @@ function createFormElement(item) {
         section.appendChild(formElement);
     });
 
-    // Always append the infinite list for the "Teleoperated" and "Autonomous" sections
     if (sectionName === 'Autonomous') {
         section.appendChild(createInfiniteList('auton'));
     } else if (sectionName === 'Teleoperated') {
@@ -453,14 +413,6 @@ function createFormElement(item) {
 
     return section;
 }
-///////////   ////////////    //          //   //////////   ////////////    //////////////
-//            //        //    ////        //   //               //          // 
-//            //        //    //  //      //   //               //          //
-//            //        //    //    //    //   ////////         //          //      //////
-//            //        //    //      //  //   //               //          //          //
-//            //        //    //        ////   //               //          //          //
-///////////   ////////////    //          //   //           ///////////     //////////////
-        
 
 const config_data = `{
     "dataFormat": "tsv",
@@ -490,130 +442,115 @@ const config_data = `{
     ]
 }`;
 
-//        { "name": "Human Player Score", "code": "HPScore", "type": "counter" },
-//        { "name": "Human Player Miss", "code": "HPMiss", "type": "counter" }
+const config = JSON.parse(config_data);
+const form = document.getElementById('scouting-form');
 
-        const config = JSON.parse(config_data);
-        const form = document.getElementById('scouting-form');
+document.getElementById('page-title').textContent = config.page_title;
 
-        document.getElementById('page-title').textContent = config.page_title;
+form.appendChild(createSection('Pre-match', config.prematch));
+form.appendChild(createSection('Autonomous', config.auton));
+form.appendChild(createSection('Teleoperated', config.teleop));
+form.appendChild(createSection('End Game', config.endgame));
+form.appendChild(createSection('Post-match', config.postmatch));
 
-        form.appendChild(createSection('Pre-match', config.prematch));
-        form.appendChild(createSection('Autonomous', config.auton));
-        form.appendChild(createSection('Teleoperated', config.teleop));
-        form.appendChild(createSection('End Game', config.endgame));
-        form.appendChild(createSection('Post-match', config.postmatch));
+function addToList(listId, result) {
+    const location = document.getElementById(`shotLocation-${listId}`).value;
+    
+    const listDiv = document.getElementById(`list-${listId}`);
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    
+    const text = document.createElement('span');
+    text.textContent = `${result} score on ${location}`;
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.onclick = function() {
+        listDiv.removeChild(item);
+    };
+    
+    item.appendChild(text);
+    item.appendChild(deleteBtn);
+    listDiv.appendChild(item);
+}
 
-        function addToList(listId) {
-            const result = document.getElementById(`shotResult-${listId}`).value;
-            const location = document.getElementById(`shotLocation-${listId}`).value;
-            
-            const listDiv = document.getElementById(`list-${listId}`);
-            const item = document.createElement('div');
-            item.className = 'list-item';
-            
-            const text = document.createElement('span');
-            //where to change the name for the list item
-            text.textContent = `${result} score on ${location}`;
-            
-            const deleteBtn = document.createElement('button');
-            deleteBtn.textContent = 'Delete';
-            deleteBtn.className = 'delete-btn';
-            deleteBtn.onclick = function() {
-                listDiv.removeChild(item);
-            };
-            
-            item.appendChild(text);
-            item.appendChild(deleteBtn);
-            listDiv.appendChild(item);
-        }
-
-        function collectListData(listId) {
+function collectListData(listId) {
     const listDiv = document.getElementById(`list-${listId}`);
     const items = listDiv.getElementsByClassName('list-item');
-    const dataMap = {};
+    const dataMap = {
+        'MA L1': 0, 'MA L2': 0, 'MA L3': 0, 'MA L4': 0, 'MA BAR': 0, 'MA PRO': 0,
+        'MI L1': 0, 'MI L2': 0, 'MI L3': 0, 'MI L4': 0, 'MI BAR': 0, 'MI PRO': 0
+    };
 
     Array.from(items).forEach(item => {
         const text = item.querySelector('span').textContent;
-        const [result, location] = text.split(' score on '); // Ensure this matches the format in `addToList`
+        const [result, location] = text.split(' score on ');
         const key = `${result.substring(0, 2).toUpperCase()} ${location}`;
         dataMap[key] = (dataMap[key] || 0) + 1;
     });
 
-    console.log(`Collected data for ${listId}:`, dataMap); // Debugging line
+    console.log(`Collected data for ${listId}:`, dataMap);
 
-    // Always include the count, even if it's 1
-    return Object.entries(dataMap).map(([key, count]) => `${key} ${count}`).join(', ');
+    return Object.entries(dataMap).map(([key, count]) => `${key} ${count};`).join(' ');
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.getElementById('submit-button');
     
     submitButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault();
 
-        // Validate form fields, excluding "Leave Starting Zone"
         if (!validateForm()) {
             alert('Please fill out all required fields.');
             return;
         }
 
-        // Collect form data
         const formData = new FormData(form);
         let dataString = '';
         let leaveStartingIncluded = false;
 
         for (let [key, value] of formData.entries()) {
             if (key === 'n' || key === 'Match' || key === 'Robot' || key === 'Team') {
-                // Append only the value without the key for specific fields
                 dataString += `${value};`;
 
-                // Check if the current key is 'Team' to append 'leaveStarting' next
                 if (key === 'Team' && !leaveStartingIncluded) {
                     const leaveStartingValue = formData.get('leaveStarting') === 'on' ? 'true' : 'false';
-                    dataString += `${leaveStartingValue};`; // Append only the value
+                    dataString += `${leaveStartingValue};`;
                     leaveStartingIncluded = true;
 
-                    // Append AutonList and TeleopList immediately after leaveStarting
                     const autonData = collectListData('auton');
-                    console.log('Auton data:', autonData); // Debugging line
-                    dataString += `${autonData};`; // Append only the value
+                    console.log('Auton data:', autonData);
+                    dataString += `${autonData}`;
 
                     const teleopData = collectListData('teleop');
-                    console.log('Teleop data:', teleopData); // Debugging line
-                    dataString += `${teleopData};`; // Append only the value
+                    console.log('Teleop data:', teleopData);
+                    dataString += `${teleopData}`;
                 }
                 continue;
             }
 
-            // Skip 'leaveStarting' as it is handled after 'Team'
             if (key === 'leaveStarting') {
                 continue;
             }
 
-            // Append only the value without the key
             dataString += `${value};`;
         }
 
-        // Ensure leaveStarting is included with a default value if not present
         if (!leaveStartingIncluded) {
-            dataString += `stay;`; // Default to 'stay' if not set
+            dataString += `stay;`;
 
-            // Append AutonList and TeleopList if leaveStarting was not included
             const autonData = collectListData('auton');
-            dataString += `${autonData};`; // Append only the value
+            dataString += `${autonData}`;
 
             const teleopData = collectListData('teleop');
-            dataString += `${teleopData};`; // Append only the value
+            dataString += `${teleopData}`;
         }
 
-        console.log('Final data string:', dataString); // Debugging line
+        console.log('Final data string:', dataString);
 
-        // Generate the QR code with the collected data
         generateQRCode(dataString);
 
-        // Reset the form after submission
         resetForm();
     });
 
@@ -624,10 +561,10 @@ document.addEventListener('DOMContentLoaded', function() {
         requiredFields.forEach(field => {
             if (field.name !== 'leaveStarting' && !field.value.trim()) {
                 isValid = false;
-                field.style.borderColor = 'red'; // Optional: highlight the empty field
-                console.log(`Field ${field.name} is required but not filled.`); // Debugging line
+                field.style.borderColor = 'red';
+                console.log(`Field ${field.name} is required but not filled.`);
             } else {
-                field.style.borderColor = ''; // Reset border color if filled
+                field.style.borderColor = '';
             }
         });
 
@@ -636,34 +573,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function generateQRCode(data) {
         const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = ''; // Clear any existing QR code
+        qrContainer.innerHTML = '';
 
         new QRCode(qrContainer, {
             text: data,
-            width: 256,  // Increased width
-            height: 256, // Increased height
-            correctLevel: QRCode.CorrectLevel.L  // Lower error correction level
+            width: 256,
+            height: 256,
+            correctLevel: QRCode.CorrectLevel.L
         });
     }
 
     function resetForm() {
-        // Reset all input fields
         form.reset();
 
-        // Clear all list items in the infinite lists
         document.getElementById('list-auton').innerHTML = '';
         document.getElementById('list-teleop').innerHTML = '';
 
-        // Reset counters to 0
         const counters = form.querySelectorAll('input[type="hidden"]');
         counters.forEach(counter => {
             counter.value = '0';
-            counter.previousElementSibling.textContent = '0'; // Update the display span
+            counter.previousElementSibling.textContent = '0';
         });
     }
 });
-
-
 
 </script>
     <a href="index.html" class="submit-button" style="text-decoration: none; display: block; text-align: center;">Back</a>
