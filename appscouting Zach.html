@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCREAM Scouting App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+        }
+        .infinite-list-container {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .infinite-list-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+        }
+        .infinite-list-select {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 4px;
+            width: 100px;
+            border-radius: 10px;
+            background-color: none;
+        }
+        .list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid none;
+            border-radius: 12px;
+            padding: 10px;
+            background-color: none;
+            border-color: none;
+            flex-grow: 1;
+        }
+        .infinitelistbutton {
+            padding: 5px 10px;
+            font-size: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .infinitelistbutton:hover {
+            background-color: #45a049;
+        }
+        .list-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .delete-btn {
+            background-color: #ff4444;
+            padding: 2px 5px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+        .endgame-select {
+            padding: 15px;
+            font-size: 24px;
+            border-radius: 4px;
+            width: 200px;
+        }
+        h1, h2 {
+            color: #000000;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group > label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 40px;
+        }
+        button {
+            background-color: #d8ce44;
+            color: white;
+            padding: 30px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            min-width: 100px;
+            max-width: 800px;
+            min-height: 100px;
+            max-height: 800px;
+            margin-top: 10px;
+            font-size: 200px;
+        }
+        .color-buttons button {
+            padding: 10px 20px;
+            font-size: 24px;
+            min-width: 80px;
+            min-height: 60px;
+            position: relative;
+            z-index: 10;
+        }
+        #click-overlay {
+            position: relative;
+        }
+        button:hover {
+            background-color: #d8ce44d5;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .radio-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 100%;
+        }
+        .radio-option label {
+            font-weight: normal;
+            font-size: 1em;
+        }
+        .radio-option input[type="radio"] {
+            margin-top: 5px;
+            min-height: 50px;
+            min-width: 50px;
+        }
+        .logo {
+            max-width: 200px;
+            margin: 20px auto;
+            display: block;
+        }
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .underline {
+            text-decoration: underline;
+        }
+        section {
+            margin-bottom: 160px;
+        }
+        .submit-button {
+            background-color: #d8ce44;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 40px;
+            display: block;
+            margin: 20px auto;
+        }
+        .submit-button:hover {
+            background-color: #d8ce44d5;
+        }
+        @media (max-width: 600px) { 
+            body {
+                padding: 15px 20px;
+                font-size: 24px;
+            }
+            .radio-group {
+                flex-direction: column;
+            }
+            .radio-option {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .radio-option input[type="radio"] {
+                margin-top: 0;
+            }
+            .form-group button {
+                padding: 20px 25px;
+                font-size: 50px;
+            }
+            .form-group div[style*="display: flex"] button {
+                padding: 15px 10px;
+                font-size: 24px;
+                width: 40px;
+                height: 60px;
+            }
+            .form-group div[style*="display: flex"] span {
+                font-size: 50px;
+                min-width: 40px;
+            }
+            input[type="checkbox"] {
+                min-width: 50px;
+                min-height: 50px;
+            }
+        }
+        .rating-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rating {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            gap: 4px;
+        }
+        .rating input {
+            display: none;
+        }
+        .rating label {
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .rating label:before {
+            content: "★";
+        }
+        .rating input:checked ~ label {
+            color: #ffd700;
+        }
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: #ffed4a;
+        }
+        .rating input:checked + label:hover,
+        .rating input:checked ~ label:hover,
+        .rating input:checked ~ label:hover ~ label,
+        .rating label:hover ~ input:checked ~ label {
+            color: #ffc107;
+        }
+        .clear-rating {
+            background: #f1f1f1;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            transition: all 0.2s;
+        }
+        .clear-rating:hover {
+            background: #e4e4e4;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="page-title">SCREAM App</h1>
+    <img src="logo2.png" alt="Team SCREAM Logo" class="logo">
+    <form id="scouting-form"></form>
+    <button class="submit-button" id="submit-button">Submit</button>
+    <div id="qrcode"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+    <script>
+
+function createInfiniteList(listId) {
+    console.log(`Creating infinite list for ${listId}`); // Debugging line
+    const container = document.createElement('div');
+    container.className = 'infinite-list-container';
+
+    // Create a label for the infinite list
+    const label = document.createElement('label');
+    label.textContent = listId === 'auton' ? 'Auto Scores' : 'Teleop Scores';
+    label.style.fontWeight = 'bold';
+    label.style.fontSize = '1.1em';
+    label.style.marginBottom = '5px';
+    label.style.display = 'block';
+
+    // Append the label to the container
+    container.appendChild(label);
+
+    // Create a wrapper for the list and input group
+    const wrapper = document.createElement('div');
+    wrapper.className = 'infinite-list-wrapper';
+
+    const listDiv = document.createElement('div');
+    listDiv.id = `list-${listId}`;
+    listDiv.className = 'list-container';
+
+    const inputGroup = document.createElement('div');
+    inputGroup.className = 'input-group';
+
+    const shotLocationSelect = document.createElement('select');
+    shotLocationSelect.id = `shotLocation-${listId}`;
+    shotLocationSelect.className = 'infinite-list-select';
+    shotLocationSelect.innerHTML = `
+        <option value="L1">L1</option>
+        <option value="L2">L2</option>
+        <option value="L3">L3</option>
+        <option value="L4">L4</option>
+        <option value="BAR">BARGE</option>
+        <option value="PRO">PROCESSOR</option>
+    `;
+
+    const makeButton = document.createElement('button');
+    makeButton.className = 'infinitelistbutton';
+    makeButton.textContent = 'Make';
+    makeButton.type = 'button';
+    makeButton.onclick = () => addToList(listId, 'Make');
+
+    const missButton = document.createElement('button');
+    missButton.className = 'infinitelistbutton';
+    missButton.textContent = 'Miss';
+    missButton.type = 'button';
+    missButton.onclick = () => addToList(listId, 'Miss');
+
+    inputGroup.appendChild(shotLocationSelect);
+    inputGroup.appendChild(makeButton);
+    inputGroup.appendChild(missButton);
+
+    // Append the list and input group to the wrapper
+    wrapper.appendChild(listDiv);
+    wrapper.appendChild(inputGroup);
+
+    // Append the wrapper to the container
+    container.appendChild(wrapper);
+
+    console.log(container); // Log the container to verify its structure
+
+    return container;
+}
+
+function createFormElement(item) {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    const label = document.createElement('label');
+    label.textContent = item.name;
+    div.appendChild(label);
+
+    // Insert the image above the robot form element
+    if (item.code === 'Robot') {
+        const img = document.createElement('img');
+        img.src = 'field.png';
+        img.alt = 'Field Image';
+        img.style.maxWidth = '100%';
+        img.style.marginBottom = '10px';
+        div.appendChild(img);
+    }
+
+    let input;
+    switch (item.type) {
+        case 'scouter':
+        case 'event':
+        case 'match':
+        case 'team':
+            input = document.createElement('input');
+            input.type = 'text';
+            input.name = item.code;
+            input.required = item.required === 'true';
+            if (item.defaultValue) input.value = item.defaultValue;
+            if (item.size) input.size = item.size;
+            if (item.maxSize) input.maxLength = item.maxSize;
+            break;
+        case 'level':
+        case 'robot':
+        case 'radio':
+            if (['e_end', 'e_CPU', 'e_APU', 'e_deadBot'].includes(item.code)) {
+                input = document.createElement('select');
+                input.name = item.code;
+                input.className = 'endgame-select';
+                input.required = item.required === 'true';
+                for (let key in item.choices) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = item.choices[key];
+                    if (key === item.defaultValue) option.selected = true;
+                    input.appendChild(option);
+                }
+            } else {
+                input = document.createElement('div');
+                input.className = 'radio-group';
+                let firstRadio = true;
+                for (let key in item.choices) {
+                    const radioDiv = document.createElement('div');
+                    radioDiv.className = 'radio-option';
+                    const radioLabel = document.createElement('label');
+                    radioLabel.textContent = item.choices[key];
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = item.code;
+                    radioInput.value = key;
+                    radioInput.id = `${item.code}_${key}`;
+                    if (firstRadio && item.required === 'true') {
+                        radioInput.required = true;
+                        firstRadio = false;
+                    }
+                    if (key === item.defaultValue) radioInput.checked = true;
+                    radioDiv.appendChild(radioLabel);
+                    radioDiv.appendChild(radioInput);
+                    input.appendChild(radioDiv);
+                }
+            }
+            break;
+        case 'bool':
+            input = document.createElement('input');
+            input.type = 'checkbox';
+            input.name = item.code;
+            input.required = item.required === 'true';
+            break;
+        case 'counter':
+            break;
+        case 'text':
+            input = document.createElement('textarea');
+            input.name = item.code;
+            input.required = item.required === 'true';
+            if (item.size) input.cols = item.size;
+            if (item.maxSize) input.maxLength = item.maxSize;
+            break;
+        case 'rating':
+            input = document.createElement('div');
+            input.className = 'rating-container';
+            input.innerHTML = `
+                <div class="rating">
+                    <input type="radio" id="${item.code}_star5" name="${item.code}" value="5">
+                    <label for="${item.code}_star5" title="5 stars"></label>
+                    <input type="radio" id="${item.code}_star4" name="${item.code}" value="4">
+                    <label for="${item.code}_star4" title="4 stars"></label>
+                    <input type="radio" id="${item.code}_star3" name="${item.code}" value="3">
+                    <label for="${item.code}_star3" title="3 stars"></label>
+                    <input type="radio" id="${item.code}_star2" name="${item.code}" value="2">
+                    <label for="${item.code}_star2" title="2 stars"></label>
+                    <input type="radio" id="${item.code}_star1" name="${item.code}" value="1">
+                    <label for="${item.code}_star1" title="1 star"></label>
+                </div>
+                <button class="clear-rating" onclick="clearRating('${item.code}')">Clear</button>
+            `;
+            break;
+    }
+    if (input) div.appendChild(input);
+    return div;
+}
+
+function createSection(sectionName, items) {
+    const section = document.createElement('section');
+    const heading = document.createElement('h2');
+    heading.textContent = sectionName;
+    section.appendChild(heading);
+
+    items.forEach(item => {
+        const formElement = createFormElement(item);
+        section.appendChild(formElement);
+    });
+
+    if (sectionName === 'Autonomous') {
+        section.appendChild(createInfiniteList('auton'));
+    } else if (sectionName === 'Teleoperated') {
+        section.appendChild(createInfiniteList('teleop'));
+    }
+
+    return section;
+}
+
+const config_data = `{
+    "dataFormat": "tsv",
+    "title": "SCREAM App",
+    "page_title": "Team SCREAM Scouting App",
+    "checkboxAs": "10",
+    "prematch": [
+        { "name": "Scouters First Name", "code": "n", "type": "scouter", "size": 5, "maxSize": 999, "required": "true" },
+        { "name": "Match #", "code": "Match", "type": "match", "min": 1, "max": 150, "required": "true" },
+        { "name": "Robot", "code": "Robot", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true" },
+        { "name": "Team #", "code": "Team", "type": "team", "min": 1, "max": 99999 }
+    ],
+    "auton": [
+        { "name": "Leave Starting Zone", "code": "leaveStarting", "type": "bool" }
+    ],
+    "teleop": [],
+    "endgame": [
+        { "name": "Ended", "code": "Ended", "type": "radio", "choices": { "Parked": "Parked", "Deep": "Climbed Deep", "Shallow": "Climbed Shallow", "None": "Neither" } },
+        { "name": "Deadbot", "code": "deadBot", "type": "radio", "choices": { "None": "None", ".25": "Quarter", ".5": "Half", ".75": "Three Fourths", "full": "Full" } }
+    ],
+    "postmatch": [
+        { "name": "Algae Picked Up", "code": "Algae", "type": "radio", "choices": { "Reef": "Reef", "Floor": "Floor", "Both": "Both", "Neither": "Neither" } },
+        { "name": "Coral Picked Up", "code": "Coral", "type": "radio", "choices": { "Source": "Source", "Floor": "Floor", "Both": "Both", "Neither": "Neither" } },
+        { "name": "Driver Skill", "code": "driver", "type": "rating" },
+        { "name": "Defense Rating", "code": "defense", "type": "rating" },
+        { "name": "Speed Rating", "code": "speed", "type": "rating" }
+    ]
+}`;
+
+const config = JSON.parse(config_data);
+const form = document.getElementById('scouting-form');
+
+document.getElementById('page-title').textContent = config.page_title;
+
+form.appendChild(createSection('Pre-match', config.prematch));
+form.appendChild(createSection('Autonomous', config.auton));
+form.appendChild(createSection('Teleoperated', config.teleop));
+form.appendChild(createSection('End Game', config.endgame));
+form.appendChild(createSection('Post-match', config.postmatch));
+
+function addToList(listId, result) {
+    const location = document.getElementById(`shotLocation-${listId}`).value;
+    
+    const listDiv = document.getElementById(`list-${listId}`);
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    
+    const text = document.createElement('span');
+    text.textContent = `${result} score on ${location}`;
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.onclick = function() {
+        listDiv.removeChild(item);
+    };
+    
+    item.appendChild(text);
+    item.appendChild(deleteBtn);
+    listDiv.appendChild(item);
+}
+
+function collectListData(listId) {
+    const listDiv = document.getElementById(`list-${listId}`);
+    const items = listDiv.getElementsByClassName('list-item');
+    const dataMap = {
+        'MA L1': 0, 'MA L2': 0, 'MA L3': 0, 'MA L4': 0, 'MA BAR': 0, 'MA PRO': 0,
+        'MI L1': 0, 'MI L2': 0, 'MI L3': 0, 'MI L4': 0, 'MI BAR': 0, 'MI PRO': 0
+    };
+
+    Array.from(items).forEach(item => {
+        const text = item.querySelector('span').textContent;
+        const [result, location] = text.split(' score on ');
+        const key = `${result.substring(0, 2).toUpperCase()} ${location}`;
+        dataMap[key] = (dataMap[key] || 0) + 1;
+    });
+
+    console.log(`Collected data for ${listId}:`, dataMap);
+
+    return Object.entries(dataMap).map(([key, count]) => `${key} ${count};`).join(' ');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const submitButton = document.getElementById('submit-button');
+    
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        if (!validateForm()) {
+            alert('Please fill out all required fields.');
+            return;
+        }
+
+        const formData = new FormData(form);
+        let dataString = '';
+        let leaveStartingIncluded = false;
+
+        for (let [key, value] of formData.entries()) {
+            if (key === 'n' || key === 'Match' || key === 'Robot' || key === 'Team') {
+                dataString += `${value};`;
+
+                if (key === 'Team' && !leaveStartingIncluded) {
+                    const leaveStartingValue = formData.get('leaveStarting') === 'on' ? 'true' : 'false';
+                    dataString += `${leaveStartingValue};`;
+                    leaveStartingIncluded = true;
+
+                    const autonData = collectListData('auton');
+                    console.log('Auton data:', autonData);
+                    dataString += `${autonData}`;
+
+                    const teleopData = collectListData('teleop');
+                    console.log('Teleop data:', teleopData);
+                    dataString += `${teleopData}`;
+                }
+                continue;
+            }
+
+            if (key === 'leaveStarting') {
+                continue;
+            }
+
+            dataString += `${value};`;
+        }
+
+        if (!leaveStartingIncluded) {
+            dataString += `stay;`;
+
+            const autonData = collectListData('auton');
+            dataString += `${autonData}`;
+
+            const teleopData = collectListData('teleop');
+            dataString += `${teleopData}`;
+        }
+
+        console.log('Final data string:', dataString);
+
+        generateQRCode(dataString);
+
+        resetForm();
+    });
+
+    function validateForm() {
+        let isValid = true;
+        const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
+
+        requiredFields.forEach(field => {
+            if (field.name !== 'leaveStarting' && !field.value.trim()) {
+                isValid = false;
+                field.style.borderColor = 'red';
+                console.log(`Field ${field.name} is required but not filled.`);
+            } else {
+                field.style.borderColor = '';
+            }
+        });
+
+        return isValid;
+    }
+
+    function generateQRCode(data) {
+        const qrContainer = document.getElementById('qrcode');
+        qrContainer.innerHTML = '';
+
+        new QRCode(qrContainer, {
+            text: data,
+            width: 256,
+            height: 256,
+            correctLevel: QRCode.CorrectLevel.L
+        });
+    }
+
+    function resetForm() {
+        form.reset();
+
+        document.getElementById('list-auton').innerHTML = '';
+        document.getElementById('list-teleop').innerHTML = '';
+
+        const counters = form.querySelectorAll('input[type="hidden"]');
+        counters.forEach(counter => {
+            counter.value = '0';
+            counter.previousElementSibling.textContent = '0';
+        });
+    }
+});
+
+function clearRating(ratingName) {
+    const ratings = document.getElementsByName(ratingName);
+    ratings.forEach(radio => {
+        radio.checked = false;
+    });
+}
+
+document.querySelectorAll('.clear-rating').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevents the default action of the button
+        clearRating(button.previousElementSibling.name);
+    });
+});
+
+</script>
+    <a href="index.html" class="submit-button" style="text-decoration: none; display: block; text-align: center;">Back</a>
+</body>
+</html>
