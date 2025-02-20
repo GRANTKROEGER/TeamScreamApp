@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCREAM Scouting App</title>
     <style>
+        /* Existing styles */
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -271,8 +272,17 @@
         .clear-rating:hover {
             background: #e4e4e4;
         }
+
+        /* Updated styles for the team number dropdown */
+        select[name="Team"] {
+            width: 200px; /* Increase the width */
+            font-size: 24px; /* Increase the font size */
+            padding: 10px; /* Add padding for better appearance */
+            border-radius: 8px; /* Adjust border radius */
+        }
     </style>
 </head>
+
 <body>
     <h1 id="page-title">SCREAM App</h1>
     <img src="logo2.png" alt="Team SCREAM Logo" class="logo">
@@ -283,402 +293,454 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
     <script>
+        function createInfiniteList(listId) {
+            console.log(`Creating infinite list for ${listId}`); // Debugging line
+            const container = document.createElement('div');
+            container.className = 'infinite-list-container';
 
-function createInfiniteList(listId) {
-    console.log(`Creating infinite list for ${listId}`); // Debugging line
-    const container = document.createElement('div');
-    container.className = 'infinite-list-container';
+            // Create a label for the infinite list
+            const label = document.createElement('label');
+            label.textContent = listId === 'auton' ? 'Auto Scores' : 'Teleop Scores';
+            label.style.fontWeight = 'bold';
+            label.style.fontSize = '1.1em';
+            label.style.marginBottom = '5px';
+            label.style.display = 'block';
 
-    // Create a label for the infinite list
-    const label = document.createElement('label');
-    label.textContent = listId === 'auton' ? 'Auto Scores' : 'Teleop Scores';
-    label.style.fontWeight = 'bold';
-    label.style.fontSize = '1.1em';
-    label.style.marginBottom = '5px';
-    label.style.display = 'block';
+            // Append the label to the container
+            container.appendChild(label);
 
-    // Append the label to the container
-    container.appendChild(label);
+            // Create a wrapper for the list and input group
+            const wrapper = document.createElement('div');
+            wrapper.className = 'infinite-list-wrapper';
 
-    // Create a wrapper for the list and input group
-    const wrapper = document.createElement('div');
-    wrapper.className = 'infinite-list-wrapper';
+            const listDiv = document.createElement('div');
+            listDiv.id = `list-${listId}`;
+            listDiv.className = 'list-container';
 
-    const listDiv = document.createElement('div');
-    listDiv.id = `list-${listId}`;
-    listDiv.className = 'list-container';
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
 
-    const inputGroup = document.createElement('div');
-    inputGroup.className = 'input-group';
-
-    const shotLocationSelect = document.createElement('select');
-    shotLocationSelect.id = `shotLocation-${listId}`;
-    shotLocationSelect.className = 'infinite-list-select';
-    shotLocationSelect.innerHTML = `
-        <option value="L1">L1</option>
-        <option value="L2">L2</option>
-        <option value="L3">L3</option>
-        <option value="L4">L4</option>
-        <option value="BAR">BARGE</option>
-        <option value="PRO">PROCESSOR</option>
-    `;
-
-    const makeButton = document.createElement('button');
-    makeButton.className = 'infinitelistbutton';
-    makeButton.textContent = 'Make';
-    makeButton.type = 'button';
-    makeButton.onclick = () => addToList(listId, 'Make');
-
-    const missButton = document.createElement('button');
-    missButton.className = 'infinitelistbutton';
-    missButton.textContent = 'Miss';
-    missButton.type = 'button';
-    missButton.onclick = () => addToList(listId, 'Miss');
-
-    inputGroup.appendChild(shotLocationSelect);
-    inputGroup.appendChild(makeButton);
-    inputGroup.appendChild(missButton);
-
-    // Append the list and input group to the wrapper
-    wrapper.appendChild(listDiv);
-    wrapper.appendChild(inputGroup);
-
-    // Append the wrapper to the container
-    container.appendChild(wrapper);
-
-    console.log(container); // Log the container to verify its structure
-
-    return container;
-}
-
-function createFormElement(item) {
-    const div = document.createElement('div');
-    div.className = 'form-group';
-    const label = document.createElement('label');
-    label.textContent = item.name;
-    div.appendChild(label);
-
-    // Insert the image above the robot form element
-    if (item.code === 'Robot') {
-        const img = document.createElement('img');
-        img.src = 'field.png';
-        img.alt = 'Field Image';
-        img.style.maxWidth = '100%';
-        img.style.marginBottom = '10px';
-        div.appendChild(img);
-    }
-
-    let input;
-    switch (item.type) {
-        case 'scouter':
-        case 'event':
-        case 'match':
-        case 'team':
-            input = document.createElement('input');
-            input.type = 'text';
-            input.name = item.code;
-            input.required = item.required === 'true';
-            if (item.defaultValue) input.value = item.defaultValue;
-            if (item.size) input.size = item.size;
-            if (item.maxSize) input.maxLength = item.maxSize;
-            break;
-        case 'level':
-        case 'robot':
-        case 'radio':
-            if (['e_end', 'e_CPU', 'e_APU', 'e_deadBot'].includes(item.code)) {
-                input = document.createElement('select');
-                input.name = item.code;
-                input.className = 'endgame-select';
-                input.required = item.required === 'true';
-                for (let key in item.choices) {
-                    const option = document.createElement('option');
-                    option.value = key;
-                    option.textContent = item.choices[key];
-                    if (key === item.defaultValue) option.selected = true;
-                    input.appendChild(option);
-                }
-            } else {
-                input = document.createElement('div');
-                input.className = 'radio-group';
-                let firstRadio = true;
-                for (let key in item.choices) {
-                    const radioDiv = document.createElement('div');
-                    radioDiv.className = 'radio-option';
-                    const radioLabel = document.createElement('label');
-                    radioLabel.textContent = item.choices[key];
-                    const radioInput = document.createElement('input');
-                    radioInput.type = 'radio';
-                    radioInput.name = item.code;
-                    radioInput.value = key;
-                    radioInput.id = `${item.code}_${key}`;
-                    if (firstRadio && item.required === 'true') {
-                        radioInput.required = true;
-                        firstRadio = false;
-                    }
-                    if (key === item.defaultValue) radioInput.checked = true;
-                    radioDiv.appendChild(radioLabel);
-                    radioDiv.appendChild(radioInput);
-                    input.appendChild(radioDiv);
-                }
-            }
-            break;
-        case 'bool':
-            input = document.createElement('input');
-            input.type = 'checkbox';
-            input.name = item.code;
-            input.required = item.required === 'true';
-            break;
-        case 'counter':
-            break;
-        case 'text':
-            input = document.createElement('textarea');
-            input.name = item.code;
-            input.required = item.required === 'true';
-            if (item.size) input.cols = item.size;
-            if (item.maxSize) input.maxLength = item.maxSize;
-            break;
-        case 'rating':
-            input = document.createElement('div');
-            input.className = 'rating-container';
-            input.innerHTML = `
-                <div class="rating">
-                    <input type="radio" id="${item.code}_star5" name="${item.code}" value="5">
-                    <label for="${item.code}_star5" title="5 stars"></label>
-                    <input type="radio" id="${item.code}_star4" name="${item.code}" value="4">
-                    <label for="${item.code}_star4" title="4 stars"></label>
-                    <input type="radio" id="${item.code}_star3" name="${item.code}" value="3">
-                    <label for="${item.code}_star3" title="3 stars"></label>
-                    <input type="radio" id="${item.code}_star2" name="${item.code}" value="2">
-                    <label for="${item.code}_star2" title="2 stars"></label>
-                    <input type="radio" id="${item.code}_star1" name="${item.code}" value="1">
-                    <label for="${item.code}_star1" title="1 star"></label>
-                </div>
-                <button class="clear-rating" onclick="clearRating('${item.code}')">Clear</button>
+            const shotLocationSelect = document.createElement('select');
+            shotLocationSelect.id = `shotLocation-${listId}`;
+            shotLocationSelect.className = 'infinite-list-select';
+            shotLocationSelect.innerHTML = `
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+                <option value="L3">L3</option>
+                <option value="L4">L4</option>
+                <option value="BAR">BARGE</option>
+                <option value="PRO">PROCESSOR</option>
             `;
-            break;
-    }
-    if (input) div.appendChild(input);
-    return div;
-}
 
-function createSection(sectionName, items) {
-    const section = document.createElement('section');
-    const heading = document.createElement('h2');
-    heading.textContent = sectionName;
-    section.appendChild(heading);
+            const makeButton = document.createElement('button');
+            makeButton.className = 'infinitelistbutton';
+            makeButton.textContent = 'Make';
+            makeButton.type = 'button';
+            makeButton.onclick = () => addToList(listId, 'Make');
 
-    items.forEach(item => {
-        const formElement = createFormElement(item);
-        section.appendChild(formElement);
-    });
+            const missButton = document.createElement('button');
+            missButton.className = 'infinitelistbutton';
+            missButton.textContent = 'Miss';
+            missButton.type = 'button';
+            missButton.onclick = () => addToList(listId, 'Miss');
 
-    if (sectionName === 'Autonomous') {
-        section.appendChild(createInfiniteList('auton'));
-    } else if (sectionName === 'Teleoperated') {
-        section.appendChild(createInfiniteList('teleop'));
-    }
+            inputGroup.appendChild(shotLocationSelect);
+            inputGroup.appendChild(makeButton);
+            inputGroup.appendChild(missButton);
 
-    return section;
-}
+            // Append the list and input group to the wrapper
+            wrapper.appendChild(listDiv);
+            wrapper.appendChild(inputGroup);
 
-const config_data = `{
-    "dataFormat": "tsv",
-    "title": "SCREAM App",
-    "page_title": "Team SCREAM Scouting App",
-    "checkboxAs": "10",
-    "prematch": [
-        { "name": "Scouters First Name", "code": "n", "type": "scouter", "size": 5, "maxSize": 999, "required": "true" },
-        { "name": "Match #", "code": "Match", "type": "match", "min": 1, "max": 150, "required": "true" },
-        { "name": "Robot", "code": "Robot", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true" },
-        { "name": "Team #", "code": "Team", "type": "team", "min": 1, "max": 99999 }
-    ],
-    "auton": [
-        { "name": "Leave Starting Zone", "code": "leaveStarting", "type": "bool" }
-    ],
-    "teleop": [],
-    "endgame": [
-        { "name": "Ended", "code": "Ended", "type": "radio", "choices": { "Parked": "Parked", "Deep": "Climbed Deep", "Shallow": "Climbed Shallow", "None": "Neither" } },
-        { "name": "Deadbot", "code": "deadBot", "type": "radio", "choices": { "None": "None", ".25": "Quarter", ".5": "Half", ".75": "Three Fourths", "full": "Full" } }
-    ],
-    "postmatch": [
-        { "name": "Algae Picked Up", "code": "Algae", "type": "radio", "choices": { "Reef": "Reef", "Floor": "Floor", "Both": "Both", "Neither": "Neither" } },
-        { "name": "Coral Picked Up", "code": "Coral", "type": "radio", "choices": { "Source": "Source", "Floor": "Floor", "Both": "Both", "Neither": "Neither" } },
-        { "name": "Driver Skill", "code": "driver", "type": "rating" },
-        { "name": "Defense Rating", "code": "defense", "type": "rating" },
-        { "name": "Speed Rating", "code": "speed", "type": "rating" }
-    ]
-}`;
+            // Append the wrapper to the container
+            container.appendChild(wrapper);
 
-const config = JSON.parse(config_data);
-const form = document.getElementById('scouting-form');
+            console.log(container); // Log the container to verify its structure
 
-document.getElementById('page-title').textContent = config.page_title;
-
-form.appendChild(createSection('Pre-match', config.prematch));
-form.appendChild(createSection('Autonomous', config.auton));
-form.appendChild(createSection('Teleoperated', config.teleop));
-form.appendChild(createSection('End Game', config.endgame));
-form.appendChild(createSection('Post-match', config.postmatch));
-
-function addToList(listId, result) {
-    const location = document.getElementById(`shotLocation-${listId}`).value;
-    
-    const listDiv = document.getElementById(`list-${listId}`);
-    const item = document.createElement('div');
-    item.className = 'list-item';
-    
-    const text = document.createElement('span');
-    text.textContent = `${result} score on ${location}`;
-    
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = 'Delete';
-    deleteBtn.className = 'delete-btn';
-    deleteBtn.onclick = function() {
-        listDiv.removeChild(item);
-    };
-    
-    item.appendChild(text);
-    item.appendChild(deleteBtn);
-    listDiv.appendChild(item);
-}
-
-function collectListData(listId) {
-    const listDiv = document.getElementById(`list-${listId}`);
-    const items = listDiv.getElementsByClassName('list-item');
-    const dataMap = {
-        'MA L1': 0, 'MA L2': 0, 'MA L3': 0, 'MA L4': 0, 'MA BAR': 0, 'MA PRO': 0,
-        'MI L1': 0, 'MI L2': 0, 'MI L3': 0, 'MI L4': 0, 'MI BAR': 0, 'MI PRO': 0
-    };
-
-    Array.from(items).forEach(item => {
-        const text = item.querySelector('span').textContent;
-        const [result, location] = text.split(' score on ');
-        const key = `${result.substring(0, 2).toUpperCase()} ${location}`;
-        dataMap[key] = (dataMap[key] || 0) + 1;
-    });
-
-    console.log(`Collected data for ${listId}:`, dataMap);
-
-    return Object.entries(dataMap).map(([key, count]) => `${key} ${count};`).join(' ');
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const submitButton = document.getElementById('submit-button');
-    
-    submitButton.addEventListener('click', function(event) {
-        event.preventDefault();
-
-        if (!validateForm()) {
-            alert('Please fill out all required fields.');
-            return;
+            return container;
         }
 
-        const formData = new FormData(form);
-        let dataString = '';
-        let leaveStartingIncluded = false;
+        function createFormElement(item) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            const label = document.createElement('label');
+            label.textContent = item.name;
+            div.appendChild(label);
 
-        for (let [key, value] of formData.entries()) {
-            if (key === 'n' || key === 'Match' || key === 'Robot' || key === 'Team') {
-                dataString += `${value};`;
+            // Insert the image above the robot form element
+            if (item.code === 'Robot') {
+                const img = document.createElement('img');
+                img.src = 'field.png';
+                img.alt = 'Field Image';
+                img.style.maxWidth = '100%';
+                img.style.marginBottom = '10px';
+                div.appendChild(img);
+            }
 
-                if (key === 'Team' && !leaveStartingIncluded) {
-                    const leaveStartingValue = formData.get('leaveStarting') === 'on' ? 'true' : 'false';
-                    dataString += `${leaveStartingValue};`;
-                    leaveStartingIncluded = true;
+            let input;
+            switch (item.type) {
+                case 'scouter':
+                    input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = item.code;
+                    input.required = item.required === 'true';
+                    break;
+                case 'match':
+                    input = document.createElement('input');
+                    input.type = 'number';
+                    input.name = item.code;
+                    input.min = item.min;
+                    input.max = item.max;
+                    input.required = item.required === 'true';
+                    break;
+                case 'event':
+                case 'team':
+                    input = document.createElement('select');
+                    input.name = item.code;
+                    input.required = item.required === 'true';
+                    const teams = [
+'1710',
+'1723',
+'1736',
+'1756',
+'1763',
+'1785',
+'1806',
+'1810',
+'1939',
+'1987',
+'1997',
+'2357',
+'2718',
+'2996',
+'3184',
+'3284',
+'3928',
+'4187',
+'4213',
+'4522',
+'4646',
+'4766',
+'5126',
+'5141',
+'5576',
+'5801',
+'5809',
+'5968',
+'6419',
+'7662',
+'8112',
+'8825',
+'9031',
+'9316',
+'9570'
+
+
+                    ]; // Add or remove team numbers here
+                    teams.forEach(team => {
+                        const option = document.createElement('option');
+                        option.value = team;
+                        option.textContent = team;
+                        input.appendChild(option);
+                    });
+                    break;
+                case 'level':
+                case 'robot':
+                case 'radio':
+                    if (['e_end', 'e_CPU', 'e_APU', 'e_deadBot'].includes(item.code)) {
+                        input = document.createElement('select');
+                        input.name = item.code;
+                        input.className = 'endgame-select';
+                        input.required = item.required === 'true';
+                        for (let key in item.choices) {
+                            const option = document.createElement('option');
+                            option.value = key;
+                            option.textContent = item.choices[key];
+                            if (key === item.defaultValue) option.selected = true;
+                            input.appendChild(option);
+                        }
+                    } else {
+                        input = document.createElement('div');
+                        input.className = 'radio-group';
+                        let firstRadio = true;
+                        for (let key in item.choices) {
+                            const radioDiv = document.createElement('div');
+                            radioDiv.className = 'radio-option';
+                            const radioLabel = document.createElement('label');
+                            radioLabel.textContent = item.choices[key];
+                            const radioInput = document.createElement('input');
+                            radioInput.type = 'radio';
+                            radioInput.name = item.code;
+                            radioInput.value = key;
+                            radioInput.id = `${item.code}_${key}`;
+                            if (firstRadio && item.required === 'true') {
+                                radioInput.required = true;
+                                firstRadio = false;
+                            }
+                            if (key === item.defaultValue) radioInput.checked = true;
+                            radioDiv.appendChild(radioLabel);
+                            radioDiv.appendChild(radioInput);
+                            input.appendChild(radioDiv);
+                        }
+                    }
+                    break;
+                case 'bool':
+                    input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.name = item.code;
+                    input.required = item.required === 'true';
+                    break;
+                case 'counter':
+                    break;
+                case 'text':
+                    input = document.createElement('textarea');
+                    input.name = item.code;
+                    input.required = item.required === 'true';
+                    if (item.size) input.cols = item.size;
+                    if (item.maxSize) input.maxLength = item.maxSize;
+                    break;
+                case 'rating':
+                    input = document.createElement('div');
+                    input.className = 'rating-container';
+                    input.innerHTML = `
+                        <div class="rating">
+                            <input type="radio" id="${item.code}_star5" name="${item.code}" value="5">
+                            <label for="${item.code}_star5" title="5 stars"></label>
+                            <input type="radio" id="${item.code}_star4" name="${item.code}" value="4">
+                            <label for="${item.code}_star4" title="4 stars"></label>
+                            <input type="radio" id="${item.code}_star3" name="${item.code}" value="3">
+                            <label for="${item.code}_star3" title="3 stars"></label>
+                            <input type="radio" id="${item.code}_star2" name="${item.code}" value="2">
+                            <label for="${item.code}_star2" title="2 stars"></label>
+                            <input type="radio" id="${item.code}_star1" name="${item.code}" value="1">
+                            <label for="${item.code}_star1" title="1 star"></label>
+                        </div>
+                        <button class="clear-rating" onclick="clearRating('${item.code}')">Clear</button>
+                    `;
+                    break;
+            }
+            if (input) div.appendChild(input);
+            return div;
+        }
+
+        function createSection(sectionName, items) {
+            const section = document.createElement('section');
+            const heading = document.createElement('h2');
+            heading.textContent = sectionName;
+            section.appendChild(heading);
+
+            items.forEach(item => {
+                const formElement = createFormElement(item);
+                section.appendChild(formElement);
+            });
+
+            if (sectionName === 'Autonomous') {
+                section.appendChild(createInfiniteList('auton'));
+            } else if (sectionName === 'Teleoperated') {
+                section.appendChild(createInfiniteList('teleop'));
+            }
+
+            return section;
+        }
+
+        const config_data = `{
+            "dataFormat": "tsv",
+            "title": "SCREAM App",
+            "page_title": "Team SCREAM Scouting App",
+            "checkboxAs": "10",
+            "prematch": [
+                { "name": "Scouters First Name", "code": "n", "type": "scouter", "required": "true" },
+                { "name": "Match #", "code": "Match", "type": "match", "min": 1, "max": 150, "required": "true" },
+                { "name": "Robot", "code": "Robot", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true" },
+                { "name": "Team #", "code": "Team", "type": "team", "required": "true" }
+            ],
+            "auton": [
+                { "name": "Leave Starting Zone", "code": "leaveStarting", "type": "bool" }
+            ],
+            "teleop": [],
+            "endgame": [
+                { "name": "Ended", "code": "Ended", "type": "radio", "choices": { "Parked": "Parked", "Deep": "Climbed Deep", "Shallow": "Climbed Shallow", "None": "Neither" } },
+                { "name": "Deadbot", "code": "deadBot", "type": "radio", "choices": { "None": "None", ".25": "Quarter", ".5": "Half", ".75": "Three Fourths", "full": "Full" } }
+            ],
+            "postmatch": [
+                { "name": "Algae Picked Up", "code": "Algae", "type": "radio", "choices": { "Reef": "Reef", "Floor": "Floor", "Both": "Both", "Neither": "Neither" } },
+                { "name": "Coral Picked Up", "code": "Coral", "type": "radio", "choices": { "Source": "Source", "Floor": "Floor", "Both": "Both", "Neither": "Neither" } },
+                { "name": "Driver Skill", "code": "driver", "type": "rating" },
+                { "name": "Defense Rating", "code": "defense", "type": "rating" },
+                { "name": "Speed Rating", "code": "speed", "type": "rating" }
+            ]
+        }`;
+
+        const config = JSON.parse(config_data);
+        const form = document.getElementById('scouting-form');
+
+        document.getElementById('page-title').textContent = config.page_title;
+
+        form.appendChild(createSection('Pre-match', config.prematch));
+        form.appendChild(createSection('Autonomous', config.auton));
+        form.appendChild(createSection('Teleoperated', config.teleop));
+        form.appendChild(createSection('End Game', config.endgame));
+        form.appendChild(createSection('Post-match', config.postmatch));
+
+        function addToList(listId, result) {
+            const location = document.getElementById(`shotLocation-${listId}`).value;
+            
+            const listDiv = document.getElementById(`list-${listId}`);
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            
+            const text = document.createElement('span');
+            text.textContent = `${result} score on ${location}`;
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() {
+                listDiv.removeChild(item);
+            };
+            
+            item.appendChild(text);
+            item.appendChild(deleteBtn);
+            listDiv.appendChild(item);
+        }
+
+        function collectListData(listId) {
+            const listDiv = document.getElementById(`list-${listId}`);
+            const items = listDiv.getElementsByClassName('list-item');
+            const dataMap = {
+                'MA L1': 0, 'MA L2': 0, 'MA L3': 0, 'MA L4': 0, 'MA BAR': 0, 'MA PRO': 0,
+                'MI L1': 0, 'MI L2': 0, 'MI L3': 0, 'MI L4': 0, 'MI BAR': 0, 'MI PRO': 0
+            };
+
+            Array.from(items).forEach(item => {
+                const text = item.querySelector('span').textContent;
+                const [result, location] = text.split(' score on ');
+                const key = `${result.substring(0, 2).toUpperCase()} ${location}`;
+                dataMap[key] = (dataMap[key] || 0) + 1;
+            });
+
+            console.log(`Collected data for ${listId}:`, dataMap);
+
+            return Object.entries(dataMap).map(([key, count]) => `${key} ${count};`).join(' ');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitButton = document.getElementById('submit-button');
+            
+            submitButton.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                if (!validateForm()) {
+                    alert('Please fill out all required fields.');
+                    return;
+                }
+
+                const formData = new FormData(form);
+                let dataString = '';
+                let leaveStartingIncluded = false;
+
+                for (let [key, value] of formData.entries()) {
+                    if (key === 'n' || key === 'Match' || key === 'Robot' || key === 'Team') {
+                        dataString += `${value};`;
+
+                        if (key === 'Team' && !leaveStartingIncluded) {
+                            const leaveStartingValue = formData.get('leaveStarting') === 'on' ? 'true' : 'false';
+                            dataString += `${leaveStartingValue};`;
+                            leaveStartingIncluded = true;
+
+                            const autonData = collectListData('auton');
+                            console.log('Auton data:', autonData);
+                            dataString += `${autonData}`;
+
+                            const teleopData = collectListData('teleop');
+                            console.log('Teleop data:', teleopData);
+                            dataString += `${teleopData}`;
+                        }
+                        continue;
+                    }
+
+                    if (key === 'leaveStarting') {
+                        continue;
+                    }
+
+                    dataString += `${value};`;
+                }
+
+                if (!leaveStartingIncluded) {
+                    dataString += `stay;`;
 
                     const autonData = collectListData('auton');
-                    console.log('Auton data:', autonData);
                     dataString += `${autonData}`;
 
                     const teleopData = collectListData('teleop');
-                    console.log('Teleop data:', teleopData);
                     dataString += `${teleopData}`;
                 }
-                continue;
+
+                console.log('Final data string:', dataString);
+
+                generateQRCode(dataString);
+
+                resetForm();
+            });
+
+            function validateForm() {
+                let isValid = true;
+                const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
+
+                requiredFields.forEach(field => {
+                    if (field.name !== 'leaveStarting' && !field.value.trim()) {
+                        isValid = false;
+                        field.style.borderColor = 'red';
+                        console.log(`Field ${field.name} is required but not filled.`);
+                    } else {
+                        field.style.borderColor = '';
+                    }
+                });
+
+                return isValid;
             }
 
-            if (key === 'leaveStarting') {
-                continue;
+            function generateQRCode(data) {
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = '';
+
+                new QRCode(qrContainer, {
+                    text: data,
+                    width: 256,
+                    height: 256,
+                    correctLevel: QRCode.CorrectLevel.L
+                });
             }
 
-            dataString += `${value};`;
+            function resetForm() {
+                form.reset();
+
+                document.getElementById('list-auton').innerHTML = '';
+                document.getElementById('list-teleop').innerHTML = '';
+
+                const counters = form.querySelectorAll('input[type="hidden"]');
+                counters.forEach(counter => {
+                    counter.value = '0';
+                    counter.previousElementSibling.textContent = '0';
+                });
+            }
+        });
+
+        function clearRating(ratingName) {
+            const ratings = document.getElementsByName(ratingName);
+            ratings.forEach(radio => {
+                radio.checked = false;
+            });
         }
 
-        if (!leaveStartingIncluded) {
-            dataString += `stay;`;
-
-            const autonData = collectListData('auton');
-            dataString += `${autonData}`;
-
-            const teleopData = collectListData('teleop');
-            dataString += `${teleopData}`;
-        }
-
-        console.log('Final data string:', dataString);
-
-        generateQRCode(dataString);
-
-        resetForm();
-    });
-
-    function validateForm() {
-        let isValid = true;
-        const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
-
-        requiredFields.forEach(field => {
-            if (field.name !== 'leaveStarting' && !field.value.trim()) {
-                isValid = false;
-                field.style.borderColor = 'red';
-                console.log(`Field ${field.name} is required but not filled.`);
-            } else {
-                field.style.borderColor = '';
-            }
+        document.querySelectorAll('.clear-rating').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevents the default action of the button
+                clearRating(button.previousElementSibling.name);
+            });
         });
 
-        return isValid;
-    }
-
-    function generateQRCode(data) {
-        const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = '';
-
-        new QRCode(qrContainer, {
-            text: data,
-            width: 256,
-            height: 256,
-            correctLevel: QRCode.CorrectLevel.L
-        });
-    }
-
-    function resetForm() {
-        form.reset();
-
-        document.getElementById('list-auton').innerHTML = '';
-        document.getElementById('list-teleop').innerHTML = '';
-
-        const counters = form.querySelectorAll('input[type="hidden"]');
-        counters.forEach(counter => {
-            counter.value = '0';
-            counter.previousElementSibling.textContent = '0';
-        });
-    }
-});
-
-function clearRating(ratingName) {
-    const ratings = document.getElementsByName(ratingName);
-    ratings.forEach(radio => {
-        radio.checked = false;
-    });
-}
-
-document.querySelectorAll('.clear-rating').forEach(button => {
-    button.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevents the default action of the button
-        clearRating(button.previousElementSibling.name);
-    });
-});
-
-</script>
+    </script>
     <a href="index.html" class="submit-button" style="text-decoration: none; display: block; text-align: center;">Back</a>
 </body>
 </html>
