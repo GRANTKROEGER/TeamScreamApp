@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCREAM Scouting App</title>
     <style>
-        /* Existing styles */
+        /* Existing styles with uninverted colors */
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
-            color: #000000;
+            color: #000000; /* Reverted to black */
             max-width: 100%;
             margin: 0 auto;
             padding: 20px;
             box-sizing: border-box;
-            background-color: #ffffff;
+            background-color: #ffffff; /* Reverted to white */
         }
         .infinite-list-container {
             margin-bottom: 20px;
@@ -29,6 +29,8 @@
             display: flex;
             flex-direction: column;
             margin-left: 20px;
+            border-color: black;
+            border: 10px;
         }
         .infinite-list-select {
             padding: 10px;
@@ -36,40 +38,40 @@
             border-radius: 4px;
             width: 100px;
             border-radius: 10px;
-            background-color: none;
+            background-color: transparent; /* Reverted from white */
         }
         .list-container {
             max-height: 400px;
             overflow-y: auto;
-            border: 1px solid none;
+            border: 1px solid transparent; /* Reverted from white */
             border-radius: 12px;
             padding: 10px;
-            background-color: none;
-            border-color: none;
+            background-color: transparent; /* Reverted from black */
+            border-color: transparent; /* Reverted from white */
             flex-grow: 1;
         }
         .infinitelistbutton {
             padding: 5px 10px;
             font-size: 20px;
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Green button remains unchanged */
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
         .infinitelistbutton:hover {
-            background-color: #45a049;
+            background-color: #45a049; /* Green button remains unchanged */
         }
         .list-item {
             padding: 10px;
             margin: 5px 0;
-            background-color: #f9f9f9;
+            background-color: #f9f9f9; /* Reverted from #060606 */
             border-radius: 4px;
             display: flex;
             justify-content: space-between;
         }
         .delete-btn {
-            background-color: #ff4444;
+            background-color: #ff4444; /* Red button remains unchanged */
             padding: 2px 5px;
             border: none;
             border-radius: 4px;
@@ -78,7 +80,7 @@
             font-size: 20px;
         }
         .delete-btn:hover {
-            background-color: #cc0000;
+            background-color: #cc0000; /* Red button remains unchanged */
         }
         .endgame-select {
             padding: 15px;
@@ -87,7 +89,7 @@
             width: 200px;
         }
         h1, h2 {
-            color: #000000;
+            color: #000000; /* Reverted to black */
             text-align: center;
         }
         .form-group {
@@ -104,13 +106,45 @@
         textarea {
             width: 100%;
             padding: 16px;
-            border: 1px solid #ddd;
+            border: 1px solid #ddd; /* Reverted from #222222 */
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 40px;
+            background-color: transparent; /* Reverted from white */
+            color: #ffffff; /* Reverted from black */
         }
+
+        /* Style for checked radio buttons */
+        input[type="radio"]:checked {
+            background-color: rgb(0, 0, 0); /* Change to red when selected */
+        }
+        input[type="radio"] {
+            background-color: transparent;
+            border: 10px; /* Remove any default border */
+            outline: none; /* Remove the outline */
+            appearance: none; /* Remove default styling */
+            width: 20px; /* Set a custom size */
+            height: 20px; /* Set a custom size */
+            border-radius: 50%; /* Make it circular */
+            box-shadow: 0 0 0 2px #000; /* Reverted from white */
+            transition: background-color 0.1s ease; /* Smooth transition */
+        }
+
+        /* Change the background color when checked */
+        #Robot_r1:checked,
+        #Robot_r2:checked,
+        #Robot_r3:checked {
+            background-color: red; /* Change to red when selected */
+        }
+
+        #Robot_b1:checked,
+        #Robot_b2:checked,
+        #Robot_b3:checked {
+            background-color: blue; /* Change to blue when selected */
+        }
+
         button {
-            background-color: #d8ce44;
+            background-color: #d8ce44; /* Yellow button remains unchanged */
             color: white;
             padding: 30px 30px;
             border: none;
@@ -135,7 +169,7 @@
             position: relative;
         }
         button:hover {
-            background-color: #d8ce44d5;
+            background-color: #d8ce44d5; /* Yellow button remains unchanged */
         }
         .radio-group {
             display: flex;
@@ -149,6 +183,7 @@
             align-items: center;
             text-align: center;
             min-width: 100%;
+            background-color: transparent; /* Reverted from black */
         }
         .radio-option label {
             font-weight: normal;
@@ -159,6 +194,10 @@
             min-height: 50px;
             min-width: 50px;
         }
+        .radio-option:checked{
+            border: 100px;
+        }
+
         .logo {
             max-width: 200px;
             margin: 20px auto;
@@ -176,7 +215,7 @@
             margin-bottom: 160px;
         }
         .submit-button {
-            background-color: #d8ce44;
+            background-color: #d8ce44; /* Yellow button remains unchanged */
             color: white;
             padding: 10px 20px;
             border: none;
@@ -187,7 +226,7 @@
             margin: 20px auto;
         }
         .submit-button:hover {
-            background-color: #d8ce44d5;
+            background-color: #d8ce44d5; /* Yellow button remains unchanged */
         }
         @media (max-width: 600px) { 
             body {
@@ -237,37 +276,44 @@
         .rating input {
             display: none;
         }
+
         .rating label {
-            font-size: 30px;
+            font-size: 60px; /* Increased font size for larger stars */
             color: #ddd;
             cursor: pointer;
             transition: color 0.2s;
+            flex-grow: 1;
+            text-align: center;
         }
         .rating label:before {
             content: "★";
         }
         .rating input:checked ~ label {
-            color: #ffd700;
+            color: #ffd700; /* Reverted from #0028ff */
         }
         .rating label:hover,
         .rating label:hover ~ label {
-            color: #ffed4a;
+            color: #ffed4a; /* Reverted from #001b25 */
         }
         .rating input:checked + label:hover,
         .rating input:checked ~ label:hover,
         .rating input:checked ~ label:hover ~ label,
         .rating label:hover ~ input:checked ~ label {
-            color: #ffc107;
+            color: #ffc107; /* Reverted from #003ef8 */
         }
+        input[type="bool"]{
+            border: black 10px;
+        }
+        input[type=".input-group"]
         .clear-rating {
             background: #f1f1f1;
-            border: none;
-            padding: 4px 8px;
+            padding: 1px 2px; /* Reduced padding for smaller button */
             border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 10px; /* Reduced font size */
             color: #666;
             transition: all 0.2s;
+            margin-top: 10px; /* Added margin to separate from stars */
         }
         .clear-rating:hover {
             background: #e4e4e4;
@@ -452,6 +498,7 @@
                         input = document.createElement('select');
                         input.name = item.code;
                         input.className = 'endgame-select';
+                        
                         input.required = item.required === 'true';
                         for (let key in item.choices) {
                             const option = document.createElement('option');
