@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCREAM Scouting App</title>
     <style>
-        /* Existing styles with uninverted colors */
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
-            color: #000000; /* Reverted to black */
+            color: #000000;
             max-width: 100%;
             margin: 0 auto;
             padding: 20px;
             box-sizing: border-box;
-            background-color: #ffffff; /* Reverted to white */
+            background-color: #ffffff;
+            font-size: 20px; /* Increased font size */
         }
         .infinite-list-container {
             margin-bottom: 20px;
@@ -33,55 +33,64 @@
             color: black;
             border: 10px;
         }
-        .infinite-list-select {
-            padding: 10px;
-            font-size: 18px;
+        .location-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .location-button {
+            padding: 5px;
+            font-size: 14px;
             border-radius: 4px;
-            width: 100px;
-            border-radius: 10px;
-            background-color: transparent; /* Reverted from white */
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            color: black; /* Changed text color to black */
+        }
+        .location-button.selected {
+            background-color: #4CAF50;
+            color: white;
         }
         .list-container {
             max-height: 400px;
             overflow-y: auto;
-            border: 1px solid transparent; /* Reverted from white */
+            border: 1px solid #ddd;
             border-radius: 12px;
             padding: 10px;
-            background-color: transparent; /* Reverted from black */
-            border-color: transparent; /* Reverted from white */
+            background-color: #f9f9f9;
             flex-grow: 1;
         }
         .infinitelistbutton {
-            padding: 5px 10px;
-            font-size: 20px;
-            background-color: #4CAF50; /* Green button remains unchanged */
+            padding: 10px 10px;
+            font-size: 20px; 
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
-        .infinitelistbutton:hover {
-            background-color: #45a049; /* Green button remains unchanged */
+        .listbutton:hover {
+            background-color: #45a049;
         }
         .list-item {
             padding: 10px;
             margin: 5px 0;
-            background-color: #f9f9f9; /* Reverted from #060606 */
+            background-color: #f9f9f9;
             border-radius: 4px;
             display: flex;
             justify-content: space-between;
         }
         .delete-btn {
-            background-color: #ff4444; /* Red button remains unchanged */
+            background-color: #ff4444;
             padding: 2px 5px;
             border: none;
             border-radius: 4px;
             color: white;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 16px;
         }
         .delete-btn:hover {
-            background-color: #cc0000; /* Red button remains unchanged */
+            background-color: #cc0000;
         }
         .endgame-select {
             padding: 15px;
@@ -90,8 +99,9 @@
             width: 200px;
         }
         h1, h2 {
-            color: #000000; /* Reverted to black */
+            color: #000000;
             text-align: center;
+            font-size: 28px; /* Increased font size */
         }
         .form-group {
             margin-bottom: 15px;
@@ -100,67 +110,56 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.5em; /* Increased font size */
         }
         input[type="text"],
         input[type="number"],
         textarea {
             width: 100%;
             padding: 16px;
-            border: 1px solid #ddd; /* Reverted from #222222 */
+            border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 40px;
-            background-color: transparent; /* Reverted from white */
-            color: #000000; /* Changed to black for visibility */
+            font-size: 20px; /* Increased font size */
+            background-color: transparent;
+            color: #000000;
         }
-
-        /* Style for checked radio buttons */
         input[type="radio"]:checked {
-            background-color: rgb(0, 0, 0); /* Change to red when selected */
+            background-color: rgb(0, 0, 0);
         }
         input[type="radio"] {
             background-color: transparent;
-            border: 10px; /* Remove any default border */
-            outline: none; /* Remove the outline */
-            appearance: none; /* Remove default styling */
-            width: 20px; /* Set a custom size */
-            height: 20px; /* Set a custom size */
-            border-radius: 50%; /* Make it circular */
-            box-shadow: 0 0 0 2px #000; /* Reverted from white */
-            transition: background-color 0.1s ease; /* Smooth transition */
+            border: 10px;
+            outline: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px #000;
+            transition: background-color 0.1s ease;
         }
-
-        /* Change the background color when checked */
         #Robot_r1:checked,
         #Robot_r2:checked,
         #Robot_r3:checked {
-            background-color: red; /* Change to red when selected */
+            background-color: red;
         }
-
         #Robot_b1:checked,
         #Robot_b2:checked,
         #Robot_b3:checked {
-            background-color: blue; /* Change to blue when selected */
+            background-color: blue;
         }
-
         button {
-            background-color: #d8ce44; /* Yellow button remains unchanged */
+            background-color: #d8ce44;
             color: white;
-            padding: 30px 30px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 50px;
+            border-radius: 25px;
             cursor: pointer;
-            min-width: 100px;
-            max-width: 800px;
-            min-height: 100px;
-            max-height: 800px;
-            margin-top: 10px;
-            font-size: 200px;
+            font-size: 20px; /* Increased font size */
         }
         .color-buttons button {
             padding: 10px 20px;
-            font-size: 24px;
+            font-size: 20px; /* Increased font size */
             min-width: 80px;
             min-height: 60px;
             position: relative;
@@ -170,7 +169,7 @@
             position: relative;
         }
         button:hover {
-            background-color: #d8ce44d5; /* Yellow button remains unchanged */
+            background-color: #d8ce44d5;
         }
         .radio-group {
             display: flex;
@@ -184,21 +183,20 @@
             align-items: center;
             text-align: center;
             min-width: 100%;
-            background-color: transparent; /* Reverted from black */
+            background-color: transparent;
         }
         .radio-option label {
             font-weight: normal;
-            font-size: 1em;
+            font-size: 1.4em; /* Increased font size */
         }
         .radio-option input[type="radio"] {
             margin-top: 5px;
             min-height: 50px;
             min-width: 50px;
         }
-        .radio-option:checked{
+        .radio-option:checked {
             border: 100px;
         }
-
         .logo {
             max-width: 200px;
             margin: 20px auto;
@@ -216,23 +214,23 @@
             margin-bottom: 160px;
         }
         .submit-button {
-            background-color: #d8ce44; /* Yellow button remains unchanged */
+            background-color: #d8ce44;
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 25px;
             cursor: pointer;
-            font-size: 40px;
+            font-size: 20px; /* Increased font size */
             display: block;
             margin: 20px auto;
         }
         .submit-button:hover {
-            background-color: #d8ce44d5; /* Yellow button remains unchanged */
+            background-color: #d8ce44d5;
         }
-        @media (max-width: 600px) { 
+        @media (max-width: 600px) {
             body {
                 padding: 15px 20px;
-                font-size: 24px;
+                font-size: 20px; /* Increased font size */
             }
             .radio-group {
                 flex-direction: column;
@@ -246,22 +244,22 @@
                 margin-top: 0;
             }
             .form-group button {
-                padding: 20px 25px;
-                font-size: 50px;
+                padding: 10px 15px;
+                font-size: 20px; /* Increased font size */
             }
             .form-group div[style*="display: flex"] button {
-                padding: 15px 10px;
-                font-size: 24px;
+                padding: 10px 5px;
+                font-size: 20px; /* Increased font size */
                 width: 40px;
-                height: 60px;
+                height: 40px;
             }
             .form-group div[style*="display: flex"] span {
-                font-size: 50px;
+                font-size: 20px; /* Increased font size */
                 min-width: 40px;
             }
             input[type="checkbox"] {
-                min-width: 50px;
-                min-height: 50px;
+                min-width: 20px;
+                min-height: 20px;
             }
         }
         .rating-container {
@@ -277,9 +275,8 @@
         .rating input {
             display: none;
         }
-
         .rating label {
-            font-size: 25px; /* Increased font size for larger stars */
+            font-size: 25px; /* Increased font size */
             color: #ddd;
             cursor: pointer;
             transition: color 0.2s;
@@ -290,42 +287,40 @@
             content: "★";
         }
         .rating input:checked ~ label {
-            color: #ffd700; /* Reverted from #0028ff */
+            color: #ffd700;
         }
         .rating label:hover,
         .rating label:hover ~ label {
-            color: #ffed4a; /* Reverted from #001b25 */
+            color: #ffed4a;
         }
         .rating input:checked + label:hover,
         .rating input:checked ~ label:hover,
         .rating input:checked ~ label:hover ~ label,
         .rating label:hover ~ input:checked ~ label {
-            color: #ffc107; /* Reverted from #003ef8 */
+            color: #ffc107;
         }
-        input[type="bool"]{
+        input[type="bool"] {
             border: black 10px;
         }
         input[type=".input-group"]
         .clear-rating {
             background: #f1f1f1;
-            padding: 1px 2px; /* Reduced padding for smaller button */
+            padding: 1px 2px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 10px; /* Reduced font size */
+            font-size: 20px; /* Increased font size */
             color: #666;
             transition: all 0.2s;
-            margin-top: 10px; /* Added margin to separate from stars */
+            margin-top: 10px;
         }
         .clear-rating:hover {
             background: #e4e4e4;
         }
-
-        /* Updated styles for the team number dropdown */
         select[name="Team"] {
-            width: 200px; /* Increase the width */
-            font-size: 24px; /* Increase the font size */
-            padding: 10px; /* Add padding for better appearance */
-            border-radius: 8px; /* Adjust border radius */
+            width: 200px;
+            font-size: 20px; /* Increased font size */
+            padding: 10px;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -340,12 +335,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
     <script>
+        let selectedLocation = null;
+
         function createInfiniteList(listId) {
-            console.log(`Creating infinite list for ${listId}`); // Debugging line
             const container = document.createElement('div');
             container.className = 'infinite-list-container';
 
-            // Create a label for the infinite list
             const label = document.createElement('label');
             label.textContent = listId === 'auton' ? 'Auto Scores' : 'Teleop Scores';
             label.style.fontWeight = 'bold';
@@ -353,10 +348,8 @@
             label.style.marginBottom = '5px';
             label.style.display = 'block';
 
-            // Append the label to the container
             container.appendChild(label);
 
-            // Create a wrapper for the list and input group
             const wrapper = document.createElement('div');
             wrapper.className = 'infinite-list-wrapper';
 
@@ -367,17 +360,21 @@
             const inputGroup = document.createElement('div');
             inputGroup.className = 'input-group';
 
-            const shotLocationSelect = document.createElement('select');
-            shotLocationSelect.id = `shotLocation-${listId}`;
-            shotLocationSelect.className = 'infinite-list-select';
-            shotLocationSelect.innerHTML = `
-                <option value="L1">L1</option>
-                <option value="L2">L2</option>
-                <option value="L3">L3</option>
-                <option value="L4">L4</option>
-                <option value="BAR">BARGE</option>
-                <option value="PRO">PROCESSOR</option>
-            `;
+            const locationButtons = document.createElement('div');
+            locationButtons.className = 'location-buttons';
+            const locations = ['L1', 'L2', 'L3', 'L4', 'BAR', 'PRO'];
+
+locations.forEach(location => {
+    const button = document.createElement('button');
+    button.className = 'location-button';
+    button.textContent = location;
+    button.type = 'button'; // Ensure it's not a submit button
+    button.onclick = (event) => {
+        event.preventDefault(); // Prevent default behavior
+        selectLocation(location, button);
+    };
+    locationButtons.appendChild(button);
+});
 
             const makeButton = document.createElement('button');
             makeButton.className = 'infinitelistbutton';
@@ -391,20 +388,22 @@
             missButton.type = 'button';
             missButton.onclick = () => addToList(listId, 'Miss');
 
-            inputGroup.appendChild(shotLocationSelect);
+            inputGroup.appendChild(locationButtons);
             inputGroup.appendChild(makeButton);
             inputGroup.appendChild(missButton);
 
-            // Append the list and input group to the wrapper
             wrapper.appendChild(listDiv);
             wrapper.appendChild(inputGroup);
 
-            // Append the wrapper to the container
             container.appendChild(wrapper);
 
-            console.log(container); // Log the container to verify its structure
-
             return container;
+        }
+
+        function selectLocation(location, button) {
+            selectedLocation = location;
+            document.querySelectorAll('.location-button').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
         }
 
         function createFormElement(item) {
@@ -414,7 +413,6 @@
             label.textContent = item.name;
             div.appendChild(label);
 
-            // Insert the image above the robot form element
             if (item.code === 'Robot') {
                 const img = document.createElement('img');
                 img.src = 'field.png';
@@ -446,45 +444,11 @@
                     input.name = item.code;
                     input.required = item.required === 'true';
                     const teams = [
-'167',
-'1710',
-'1723',
-'1736',
-'1756',
-'1763',
-'1785',
-'1806',
-'1810',
-'1939',
-'1987',
-'1997',
-'2357',
-'2718',
-'2996',
-'3184',
-'3284',
-'3928',
-'4187',
-'4213',
-'4522',
-'4646',
-'4766',
-'5126',
-'5141',
-'5576',
-'5801',
-'5809',
-'5968',
-'6419',
-'7662',
-'8112',
-'8825',
-'9031',
-'9316',
-'9570'
-
-
-                    ]; // Add or remove team numbers here
+                        '167', '1710', '1723', '1736', '1756', '1763', '1785', '1806', '1810',
+                        '1939', '1987', '1997', '2357', '2718', '2996', '3184', '3284', '3928',
+                        '4187', '4213', '4522', '4646', '4766', '5126', '5141', '5576', '5801',
+                        '5809', '5968', '6419', '7662', '8112', '8825', '9031', '9316', '9570'
+                    ];
                     teams.forEach(team => {
                         const option = document.createElement('option');
                         option.value = team;
@@ -499,7 +463,6 @@
                         input = document.createElement('select');
                         input.name = item.code;
                         input.className = 'endgame-select';
-                        
                         input.required = item.required === 'true';
                         for (let key in item.choices) {
                             const option = document.createElement('option');
@@ -600,7 +563,7 @@
             "prematch": [
                 { "name": "Scouters First Name", "code": "n", "type": "scouter", "required": "true" },
                 { "name": "Match #", "code": "Match", "type": "match", "min": 1, "max": 150, "required": "true" },
-                { "name": "Robot", "code": "Robot", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true" },
+                { "name": "Robot", "code": "Robot", "type": "robot", "choices": { "r1": "Red-1", "r2": "Red-2", "r3": "Red-3", "b1": "Blue-1", "b2": "Blue-2", "b3": "Blue-3" }, "required": "true", "defaultValue": "r1" },
                 { "name": "Team #", "code": "Team", "type": "team", "required": "true" }
             ],
             "auton": [
@@ -632,14 +595,17 @@
         form.appendChild(createSection('Post-match', config.postmatch));
 
         function addToList(listId, result) {
-            const location = document.getElementById(`shotLocation-${listId}`).value;
-            
+            if (!selectedLocation) {
+                alert('Please select a location first.');
+                return;
+            }
+
             const listDiv = document.getElementById(`list-${listId}`);
             const item = document.createElement('div');
             item.className = 'list-item';
             
             const text = document.createElement('span');
-            text.textContent = `${result} score on ${location}`;
+            text.textContent = `${result} score on ${selectedLocation}`;
             
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = 'Delete';
@@ -652,7 +618,6 @@
             item.appendChild(deleteBtn);
             listDiv.appendChild(item);
 
-            // Scroll to the bottom of the list
             listDiv.scrollTop = listDiv.scrollHeight;
         }
 
@@ -670,8 +635,6 @@
                 const key = `${result.substring(0, 2).toUpperCase()} ${location}`;
                 dataMap[key] = (dataMap[key] || 0) + 1;
             });
-
-            console.log(`Collected data for ${listId}:`, dataMap);
 
             return Object.entries(dataMap).map(([key, count]) => `${key} ${count};`).join(' ');
         }
@@ -701,11 +664,9 @@
                             leaveStartingIncluded = true;
 
                             const autonData = collectListData('auton');
-                            console.log('Auton data:', autonData);
                             dataString += `${autonData}`;
 
                             const teleopData = collectListData('teleop');
-                            console.log('Teleop data:', teleopData);
                             dataString += `${teleopData}`;
                         }
                         continue;
@@ -728,8 +689,6 @@
                     dataString += `${teleopData}`;
                 }
 
-                console.log('Final data string:', dataString);
-
                 generateQRCode(dataString);
 
                 resetForm();
@@ -743,7 +702,6 @@
                     if (field.name !== 'leaveStarting' && !field.value.trim()) {
                         isValid = false;
                         field.style.borderColor = 'red';
-                        console.log(`Field ${field.name} is required but not filled.`);
                     } else {
                         field.style.borderColor = '';
                     }
@@ -787,7 +745,7 @@
 
         document.querySelectorAll('.clear-rating').forEach(button => {
             button.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevents the default action of the button
+                event.preventDefault();
                 clearRating(button.previousElementSibling.name);
             });
         });
