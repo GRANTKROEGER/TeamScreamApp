@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite List with Buttons</title>
+    <style>
+        .infinite-list-container {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .infinite-list-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+        }
+        .list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 10px;
+            background-color: transparent;
+            flex-grow: 1;
+        }
+        .infinitelistbutton {
+            padding: 5px 10px;
+            font-size: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .infinitelistbutton:hover {
+            background-color: #45a049;
+        }
+        .list-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .delete-btn {
+            background-color: #ff4444;
+            padding: 2px 5px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div id="infinite-list-module"></div>
+
+    <script>
+        function createInfiniteList(listId) {
+            const container = document.createElement('div');
+            container.className = 'infinite-list-container';
+
+            const label = document.createElement('label');
+            label.textContent = listId === 'auton' ? 'Auto Scores' : 'Teleop Scores';
+            label.style.fontWeight = 'bold';
+            label.style.fontSize = '1.1em';
+            label.style.marginBottom = '5px';
+            label.style.display = 'block';
+
+            container.appendChild(label);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'infinite-list-wrapper';
+
+            const listDiv = document.createElement('div');
+            listDiv.id = `list-${listId}`;
+            listDiv.className = 'list-container';
+
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
+
+            const makeButton = document.createElement('button');
+            makeButton.className = 'infinitelistbutton';
+            makeButton.textContent = 'Make';
+            makeButton.type = 'button';
+            makeButton.onclick = () => addToList(listId, 'Make');
+
+            const missButton = document.createElement('button');
+            missButton.className = 'infinitelistbutton';
+            missButton.textContent = 'Miss';
+            missButton.type = 'button';
+            missButton.onclick = () => addToList(listId, 'Miss');
+
+            const passButton = document.createElement('button');
+            passButton.className = 'infinitelistbutton';
+            passButton.textContent = 'Pass';
+            passButton.type = 'button';
+            passButton.onclick = () => addToList(listId, 'Pass');
+
+            inputGroup.appendChild(makeButton);
+            inputGroup.appendChild(missButton);
+            inputGroup.appendChild(passButton);
+
+            wrapper.appendChild(listDiv);
+            wrapper.appendChild(inputGroup);
+
+            container.appendChild(wrapper);
+
+            return container;
+        }
+
+        function addToList(listId, action) {
+            const listDiv = document.getElementById(`list-${listId}`);
+            const item = document.createElement('div');
+            item.className = 'list-item';
+
+            const text = document.createElement('span');
+            text.textContent = `${action}`;
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() {
+                listDiv.removeChild(item);
+            };
+
+            item.appendChild(text);
+            item.appendChild(deleteBtn);
+            listDiv.appendChild(item);
+
+            listDiv.scrollTop = listDiv.scrollHeight;
+        }
+
+        document.getElementById('infinite-list-module').appendChild(createInfiniteList('auton'));
+        document.getElementById('infinite-list-module').appendChild(createInfiniteList('teleop'));
+    </script>
+</body>
+</html>
