@@ -693,6 +693,7 @@ locations.forEach(location => {
 
                 generateQRCode(dataString);
 
+                console.log('Resetting form...');
                 resetForm();
             });
 
@@ -723,11 +724,24 @@ locations.forEach(location => {
                     correctLevel: QRCode.CorrectLevel.L
                 });
             }
-
             function resetForm() {
-    const scouterName = form.querySelector('input[name="n"]').value;
+    console.log('Resetting form...');
+
+    const scouterNameInput = form.querySelector('input[name="n"]');
     const matchNumberField = form.querySelector('input[name="Match"]');
-    const robotSelection = form.querySelector('select[name="Robot"]').value;
+    const robotSelectionInputs = form.querySelectorAll('input[name="Robot"]');
+
+    console.log('Scouter Name Input:', scouterNameInput);
+    console.log('Match Number Field:', matchNumberField);
+    console.log('Robot Selection Inputs:', robotSelectionInputs);
+
+    if (!scouterNameInput || !matchNumberField || robotSelectionInputs.length === 0) {
+        console.error('One or more form elements are missing.');
+        return;
+    }
+
+    const scouterName = scouterNameInput.value;
+    const selectedRobot = Array.from(robotSelectionInputs).find(input => input.checked)?.value;
 
     // Increment match number before resetting the form
     matchNumberField.value = parseInt(matchNumberField.value) + 1; // Increment match number
@@ -735,19 +749,35 @@ locations.forEach(location => {
     form.reset();
 
     // Restore scouter name and robot selection after reset
-    form.querySelector('input[name="n"]').value = scouterName;
-    form.querySelector('select[name="Robot"]').value = robotSelection;
+    scouterNameInput.value = scouterName;
+    if (selectedRobot) {
+        const robotInputToSelect = Array.from(robotSelectionInputs).find(input => input.value === selectedRobot);
+        if (robotInputToSelect) {
+            robotInputToSelect.checked = true;
+        }
+    }
 
+    // Clear dynamic lists
     document.getElementById('list-auton').innerHTML = '';
     document.getElementById('list-teleop').innerHTML = '';
 
+    // Reset counters if any
     const counters = form.querySelectorAll('input[type="hidden"]');
     counters.forEach(counter => {
         counter.value = '0';
         counter.previousElementSibling.textContent = '0';
     });
+
+    // Clear any selected location
+    selectedLocation = null;
+    document.querySelectorAll('.location-button').forEach(btn => btn.classList.remove('selected'));
+
+    console.log('Form reset complete.');
 }
-        });
+
+
+
+});
 
         function clearRating(ratingName) {
             const ratings = document.getElementsByName(ratingName);
