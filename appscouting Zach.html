@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -444,10 +445,11 @@ locations.forEach(location => {
                     input.name = item.code;
                     input.required = item.required === 'true';
                     const teams = [
-                        '199', '254', '701', '972', '1671', '1678', '2073', '2135', '2204', '2288', 
-                        '3189', '3257', '3482', '3598', '4135', '4522', '4643', '4698', '5171', '5274', 
-                        '5419', '5458', '5499', '6662', '6665', '6981', '7137', '7157', '7528', '8768', 
-                        '9114', '9125', '9400', '10212'
+'31', '1209', '1561', '1764', '1819', '1832', '1939', '1986', '2083', '2165',
+'2333', '2341', '2345', '2352', '2359', '2373', '2395', '2718', '2773', '3163',
+'3179', '3247', '3465', '3729', '3931', '4005', '4068', '4522', '4523', '4603',
+'4766', '5098', '5437', '5454', '5550', '5889', '6026', '6424', '6809', '7130',
+'8711', '9007', '9462', '9472', '10377', '10378', '10626', '10661'
                     ];
                     teams.forEach(team => {
                         const option = document.createElement('option');
@@ -723,17 +725,28 @@ locations.forEach(location => {
             }
 
             function resetForm() {
-                form.reset();
+    const scouterName = form.querySelector('input[name="n"]').value;
+    const matchNumberField = form.querySelector('input[name="Match"]');
+    const robotSelection = form.querySelector('select[name="Robot"]').value;
 
-                document.getElementById('list-auton').innerHTML = '';
-                document.getElementById('list-teleop').innerHTML = '';
+    // Increment match number before resetting the form
+    matchNumberField.value = parseInt(matchNumberField.value) + 1; // Increment match number
 
-                const counters = form.querySelectorAll('input[type="hidden"]');
-                counters.forEach(counter => {
-                    counter.value = '0';
-                    counter.previousElementSibling.textContent = '0';
-                });
-            }
+    form.reset();
+
+    // Restore scouter name and robot selection after reset
+    form.querySelector('input[name="n"]').value = scouterName;
+    form.querySelector('select[name="Robot"]').value = robotSelection;
+
+    document.getElementById('list-auton').innerHTML = '';
+    document.getElementById('list-teleop').innerHTML = '';
+
+    const counters = form.querySelectorAll('input[type="hidden"]');
+    counters.forEach(counter => {
+        counter.value = '0';
+        counter.previousElementSibling.textContent = '0';
+    });
+}
         });
 
         function clearRating(ratingName) {
