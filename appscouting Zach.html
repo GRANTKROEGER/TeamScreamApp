@@ -335,6 +335,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     <script>
         let selectedLocation = null;
 
@@ -445,11 +446,15 @@ locations.forEach(location => {
                     input.name = item.code;
                     input.required = item.required === 'true';
                     const teams = [
-'31', '1209', '1561', '1764', '1819', '1832', '1939', '1986', '2083', '2165',
-'2333', '2341', '2345', '2352', '2359', '2373', '2395', '2718', '2773', '3163',
-'3179', '3247', '3465', '3729', '3931', '4005', '4068', '4522', '4523', '4603',
-'4766', '5098', '5437', '5454', '5550', '5889', '6026', '6424', '6809', '7130',
-'8711', '9007', '9462', '9472', '10377', '10378', '10626', '10661'
+'16', '34', '59', '176', '180', '190', '201', '233', '353', '498',
+'620', '706', '834', '971', '1002', '1218', '1501', '1538', '1540', '1561',
+'1792', '1868', '1986', '2230', '2370', '2530', '2614', '2813', '2883', '2992',
+'3035', '3128', '3459', '3506', '3536', '3572', '3863', '3990', '4039', '4135',
+'4381', '4476', '4522', '4680', '4946', '5348', '5411', '5712', '5847', '6401',
+'6429', '6436', '6574', '6989', '7539', '7558', '7709', '7769', '8214', '8503',
+'8573', '8708', '8711', '9008', '9016', '9037', '9077', '9140', '9483', '9692',
+'9785', '10011', '10589', '10690'
+
                     ];
                     teams.forEach(team => {
                         const option = document.createElement('option');
@@ -692,6 +697,13 @@ locations.forEach(location => {
                 }
 
                 generateQRCode(dataString);
+
+                // Trigger confetti effect
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
 
                 console.log('Resetting form...');
                 resetForm();

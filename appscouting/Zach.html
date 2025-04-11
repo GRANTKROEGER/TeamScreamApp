@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCREAM Scouting App</title>
+    <style>
+        /* Existing CSS styles */
+    </style>
+</head>
+
+<body>
+    <h1 id="page-title">SCREAM App</h1>
+    <img src="logo2.png" alt="Team SCREAM Logo" class="logo">
+    <form id="scouting-form"></form>
+    <button class="submit-button" id="submit-button">Submit</button>
+    <div id="qrcode"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+    <script>
+        let selectedLocation = null;
+
+        // Existing functions...
+
+        function generateQRCode(dataString) {
+            const qrcodeContainer = document.getElementById('qrcode');
+            qrcodeContainer.innerHTML = ''; // Clear previous QR code
+            new QRCode(qrcodeContainer, {
+                text: dataString,
+                width: 128,
+                height: 128
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitButton = document.getElementById('submit-button');
+            
+            submitButton.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                if (!validateForm()) {
+                    alert('Please fill out all required fields.');
+                    return;
+                }
+
+                const formData = new FormData(form);
+                let dataString = '';
+                let leaveStartingIncluded = false;
+
+                for (let [key, value] of formData.entries()) {
+                    if (key === 'n' || key === 'Match' || key === 'Robot' || key === 'Team') {
+                        dataString += `${value};`;
+
+                        if (key === 'Team' && !leaveStartingIncluded) {
+                            const leaveStartingValue = formData.get('leaveStarting') === 'on' ? 'true' : 'false';
+                            dataString += `${leaveStartingValue};`;
+                            leaveStartingIncluded = true;
+
+                            const autonData = collectListData('auton');
+                            dataString += `${autonData}`;
+
+                            const teleopData = collectListData('teleop');
+                            dataString += `${teleopData}`;
+                        }
+                        continue;
+                    }
+
+                    if (key === 'leaveStarting') {
+                        continue;
+                    }
+
+                    dataString += `${value};`;
+                }
+
+                if (!leaveStartingIncluded) {
+                    dataString += `stay;`;
+
+                    const autonData = collectListData('auton');
+                    dataString += `${autonData}`;
+
+                    const teleopData = collectListData('teleop');
+                    dataString += `${teleopData}`;
+                }
+
+                generateQRCode(dataString);
+
+                console.log('Resetting form...');
+                resetForm();
+            });
+
+            function resetForm() {
+                console.log('Inside resetForm function');
+                const scouterName = form.querySelector('input[name="n"]').value;
+                const matchNumberField = form.querySelector('input[name="Match"]');
+                const robotSelection = form.querySelector('select[name="Robot"]').value;
+
+                // Increment match number before resetting the form
+                matchNumberField.value = parseInt(matchNumberField.value) + 1; // Increment match number
+
+                form.reset();
+
+                // Restore scouter name and robot selection after reset
+                form.querySelector('input[name="n"]').value = scouterName;
+                form.querySelector('select[name="Robot"]').value = robotSelection;
+
+                document.getElementById('list-auton').innerHTML = '';
+                document.getElementById('list-teleop').innerHTML = '';
+
+                const counters = form.querySelectorAll('input[type="hidden"]');
+                counters.forEach(counter => {
+                    counter.value = '0';
+                    counter.previousElementSibling.textContent = '0';
+                });
+            }
+        });
+
+        function clearRating(ratingName) {
+            const ratings = document.getElementsByName(ratingName);
+            ratings.forEach(radio => {
+                radio.checked = false;
+            });
+        }
+
+        document.querySelectorAll('.clear-rating').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                clearRating(button.previousElementSibling.name);
+            });
+        });
+
+    </script>
+    <a href="index.html" class="submit-button" style="text-decoration: none; display: block; text-align: center;">Back</a>
+</body>
+</html>
